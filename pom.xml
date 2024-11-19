@@ -8,10 +8,10 @@
 		<version>3.3.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.oc_P6</groupId>
-	<artifactId>PayMyBuddy_v1</artifactId>
+	<groupId>com.ocP6</groupId>
+	<artifactId>PayMyBuddy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>PayMyBuddy_v1</name>
+	<name>PayMyBuddy</name>
 	<description>Openclassrooms - Projet 6 - PayMyBuddy</description>
 	<url/>
 	<licenses>

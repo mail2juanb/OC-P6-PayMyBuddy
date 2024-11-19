@@ -1,10 +1,10 @@
-package com.oc_P6.PayMyBuddy_v1;
+package com.ocP6.PayMyBuddy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PayMyBuddyV1ApplicationTests {
+class PayMyBuddyApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,4 +1,4 @@
-package com.oc_P6.PayMyBuddy_v1.model;
+package com.ocP6.PayMyBuddy.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
