@@ -19,70 +19,34 @@ public class User {
     private Long id;
 
 
-    @Column(
-            //name = "username",    // Pas besoin de le specifier explicitement, il prend le nom de la colonne par defaut
-            nullable = false,
-            unique = true,
-            length = 100
-    )
+    @Column(nullable = false, unique = true, length = 100)
     private String username;
 
 
-
-    @Column(
-            //name = "email",       // Pas besoin de le specifier explicitement, il prend le nom de la colonne par defaut
-            nullable = false,
-            unique = true,
-            length = 100
-    )
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
 
 
-
-    @Column(
-            //name = "password",        // Pas besoin de le specifier explicitement, il prend le nom de la colonne par defaut
-            nullable = false
-            //length = 255 - Pas besoin de le specifier car cest par defaut
-    )
+    @Column(nullable = false)
     private String password;
 
 
-
-    @Column(
-            //name = "balance",         // Pas besoin de le specifier explicitement, il prend le nom de la colonne par defaut
-            precision = 65,             // Cest le maximum possible
-            scale = 2
-    )
+    @Column(precision = 65, scale = 2)
     private BigDecimal balance = BigDecimal.ZERO;
 
 
     // Relation avec les transactions en tant que Sender
-    @OneToMany(
-            mappedBy = "sender",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "sender")
     private List<Transaction> sentTransactions = new ArrayList<>();
 
 
-
     // Relation avec les transactions en tant que Receiver
-    @OneToMany(
-            mappedBy = "receiver",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "receiver")
     private List<Transaction> receivedTransactions = new ArrayList<>();
 
 
-
-    // Relation many-to-many avec d'autres users via la table Connections
+    // Relation many-to-many avec d'autres users via la table Connections. Spring s'en occupe tout seul
     @ManyToMany
-    @JoinTable(
-            name = "connections",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id")
-    )
     private List<User> connections = new ArrayList<>();
 
 

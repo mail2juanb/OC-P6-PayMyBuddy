@@ -19,44 +19,22 @@ public class Transaction {
     private Long id;
 
 
-
     @ManyToOne
-    @JoinColumn(
-            //name = "sender",            // Pas besoin de le specifier explicitement, il prend le nom de la colonne par defaut
-            nullable = false
-    )
+    @JoinColumn(nullable = false)
     private User sender;
 
 
-
     @ManyToOne
-    @JoinColumn(
-            //name = "receiver",            // Pas besoin de le specifier explicitement, il prend le nom de la colonne par defaut
-            nullable = false
-    )
+    @JoinColumn(nullable = false)
     private User receiver;
 
 
-
-    @Column(
-            //name = "description",           // Pas besoin de le specifier explicitement, il prend le nom de la colonne par defaut
-            //nullable = true                 // Pas besoin de le spécifier cest pas defaut
-            //length = 255                    // Pas besoin de le specifier car cest par defaut
-    )
+    @Column()
     private String description;
 
 
-    @Column(
-            //name = "amout"                  // Pas besoin de le specifier explicitement, il prend le nom de la colonne par defaut
-            nullable = false,
-            precision = 65,                   // Cest le maximum possible
-            scale = 2
-    )
-    @DecimalMin(
-            value = "0.01",
-            //inclusive = true,               // Pas besoin de le specifier, c'est inclusive true par defaut
-            message = "Amount must be greater than 0"
-    )
+    @Column(nullable = false, precision = 65, scale = 2)
+    @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
     private BigDecimal amout;
 
 }
