@@ -2,20 +2,20 @@ package com.ocP6.PayMyBuddy.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Data                               // Génère les getters, setters, toString, equals, et hashCode
 @NoArgsConstructor                  // Génère un constructeur sans arguments
-@AllArgsConstructor
+@AllArgsConstructor                 // Génère un constructeur avec tous les arguments
+@Builder                            // Permet d'ajouter des constructeurs personalisés
 public class User {
 
     @Id
