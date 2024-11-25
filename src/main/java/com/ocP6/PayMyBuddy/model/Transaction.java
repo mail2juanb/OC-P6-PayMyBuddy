@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 @Data                               // Génère les getters, setters, toString, equals, et hashCode
 @NoArgsConstructor                  // Génère un constructeur sans arguments
 public class Transaction {
@@ -20,12 +20,12 @@ public class Transaction {
 
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "sender", nullable = false)
     private User sender;
 
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "receiver", nullable = false)
     private User receiver;
 
 
@@ -35,6 +35,6 @@ public class Transaction {
 
     @Column(nullable = false, precision = 65, scale = 2)
     @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
-    private BigDecimal amout;
+    private BigDecimal amount;
 
 }

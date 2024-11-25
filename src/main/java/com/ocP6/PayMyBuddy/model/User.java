@@ -1,17 +1,21 @@
 package com.ocP6.PayMyBuddy.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Data                               // Génère les getters, setters, toString, equals, et hashCode
 @NoArgsConstructor                  // Génère un constructeur sans arguments
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -31,7 +35,7 @@ public class User {
     private String password;
 
 
-    @Column(precision = 65, scale = 2)
+    @Column(nullable = false, precision = 65, scale = 2)
     private BigDecimal balance = BigDecimal.ZERO;
 
 
