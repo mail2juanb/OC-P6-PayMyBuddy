@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 );
 
 -- Creation de la table user_connections
-CREATE TABLE IF NOT EXISTS user_connections (
+CREATE TABLE IF NOT EXISTS users_connections (
     user_id             BIGINT NOT NULL,                           -- Identifiant de l'utilisateur, cle etrangere
     connections_id      BIGINT NOT NULL,                           -- Identifiant de l'ami, cle etrangere
 
