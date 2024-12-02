@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor                  // Génère un constructeur sans arguments
 @AllArgsConstructor                 // Génère un constructeur avec tous les arguments
 @Builder                            // Permet d'ajouter des constructeurs personalisés
-public class User {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +51,7 @@ public class User {
 
     // Relation many-to-many avec d'autres users via la table Connections. Spring s'en occupe tout seul
     @ManyToMany
-    private List<User> connections = new ArrayList<>();
+    private List<Customer> connections = new ArrayList<>();
 
 
 }
