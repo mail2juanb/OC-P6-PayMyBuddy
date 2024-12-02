@@ -1,10 +1,12 @@
 package com.ocP6.PayMyBuddy.service;
 
+import com.ocP6.PayMyBuddy.dto.AddUserRequest;
 import com.ocP6.PayMyBuddy.model.User;
 import com.ocP6.PayMyBuddy.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
 
     // Méthode pour récupérer le username d'un id
     public String findUsernameById(Long id) {
@@ -45,6 +50,20 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getConnectionsByUserIdMethodB(Long userId) {
         return userRepository.getFriendsById(userId);
+    }
+
+    public void createUser(AddUserRequest request){
+
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
+
+        final User user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(hashedPassword)
+                //.balance(BigDecimal.ZERO)               // Facultatif, balance à 0 par défaut
+                .build();
+
+        userRepository.save(user);
     }
 
     public void save(User user) {

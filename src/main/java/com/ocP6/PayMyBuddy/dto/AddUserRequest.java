@@ -1,4 +1,4 @@
-package com.ocP6.PayMyBuddy.controller.requests;
+package com.ocP6.PayMyBuddy.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
