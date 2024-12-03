@@ -45,6 +45,7 @@ body {
     color: #fff;
     border: none;
     padding: 10px;
+    margin: 10px 0;
     width: 100%;
     font-size: 1rem;
     border-radius: 4px;
@@ -54,4 +55,12 @@ body {
 /* Effet au survol du bouton */
 .login-container button:hover {
     background-color: #0056b3;
+}
+
+/* Message d'erreur */
+.error-message {
+    color: red;
+    font-size: 14px;
+    padding: 10px;
+    margin: 10px 0;
 }

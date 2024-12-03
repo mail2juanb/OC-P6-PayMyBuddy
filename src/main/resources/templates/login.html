@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de connexion - Pay My Buddy</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
     <div class="login-container">
         <h1>Pay My Buddy</h1>
-        <form action="/login" method="POST">
+        <form th:action="@{/login}" method="post">
             <input type="email" name="email" placeholder="Mail" required>
             <input type="password" name="password" placeholder="Mot de passe" required>
             <button type="submit">Se connecter</button>
         </form>
+
+        <!-- Bouton pour aller à la page d'inscription -->
+        <div class="register-link">
+            <p>Pas encore de compte ?</p>
+            <a th:href="@{/registerPage}" class="register-button">S'inscrire</a>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div th:if="${param.error}" class="error-message">
+            Nom d'utilisateur ou mot de passe incorrect.
+        </div>
     </div>
 </body>
 </html>
