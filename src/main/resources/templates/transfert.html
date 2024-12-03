@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de transfert - Pay My Buddy</title>
+    <link rel="stylesheet" href="/css/transfert.css">
+</head>
+<body>
+    <header class="navbar">
+        <h1>Pay My Buddy</h1>
+        <nav>
+            <a href="#">Transférer</a>
+            <a href="#">Profil</a>
+            <a href="#">Ajouter relation</a>
+            <a href="#">Se déconnecter</a>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="form-section">
+            <select name="relation" required>
+                <option value="" disabled selected>Sélectionner une relation</option>
+                <option value="laure-anne">Laure-Anne</option>
+                <option value="clara">Clara</option>
+                <option value="luc">Luc</option>
+            </select>
+            <input type="text" name="description" placeholder="Description" required>
+            <input type="number" name="amount" placeholder="0" min="0" step="0.01" required>
+            <button type="submit">Payer</button>
+        </section>
+        <section>
+            <h2>Mes Transactions</h2>
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Relations</th>
+                        <th>Description</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Laure-Anne</td>
+                        <td>Restaurant</td>
+                        <td>10€</td>
+                    </tr>
+                    <tr>
+                        <td>Clara</td>
+                        <td>Voyage</td>
+                        <td>25€</td>
+                    </tr>
+                    <tr>
+                        <td>Luc</td>
+                        <td>Billets de cinéma</td>
+                        <td>8€</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

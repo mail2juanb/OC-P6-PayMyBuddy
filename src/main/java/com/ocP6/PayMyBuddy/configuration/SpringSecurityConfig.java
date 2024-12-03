@@ -38,7 +38,7 @@ public class SpringSecurityConfig {
                         .loginPage("/login")                                        // Page de connexion PayMyBuddy
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/transfertPage")                        // Redirige après authentification réussie
+                        .defaultSuccessUrl("/transfert")                            // Redirige après authentification réussie
                         .failureUrl("/login?error=true")         // Paramètre en cas d'échec
                         .permitAll()
                 )
