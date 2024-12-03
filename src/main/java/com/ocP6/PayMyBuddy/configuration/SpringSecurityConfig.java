@@ -23,7 +23,7 @@ public class SpringSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private static final String[] PERMIT_ALL = {"/css/**", "/login", "registerPage"};
+    private static final String[] PERMIT_ALL = {"/css/**", "/login", "register"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

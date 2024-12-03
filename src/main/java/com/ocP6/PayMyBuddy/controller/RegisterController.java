@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class RegisterController {
 
 
-    @GetMapping("/registerPage")
-    public String registrationPage() {
-        return "registerPage";
+    @GetMapping("/register")
+    public String register() {
+        return "register";
     }
 
 
-    @PostMapping("/registerPage")
-    public String registerUser(@RequestParam String username,
-                               @RequestParam String email,
-                               @RequestParam String password,
-                               Model model) {
+    @PostMapping("/register")
+    public String registerCustomer(@RequestParam String username,
+                                   @RequestParam String email,
+                                   @RequestParam String password,
+                                   Model model) {
 
 
         // Logique pour sauvegarder l'utilisateur dans la base de données
@@ -32,14 +32,7 @@ public class RegisterController {
         // Exemple :
         // userService.registerNewUser(username, email, password);
 
-        return "redirect:/loginPage"; // Redirection vers la page de connexion
+        return "redirect:/login"; // Redirection vers la page de connexion
     }
 
-    @GetMapping("/transfertPage")
-    public String loginPage() {
-
-        log.error("transfertPage");
-        return null;
-
-    }
 }
