@@ -24,8 +24,6 @@ public class LoginController {
     public String loginRequest(@RequestParam String email,
                                @RequestParam String password,
                                Model model) {
-        // Validation du formulaire ?
-
         return "redirect:/login?success";
     }
 }
