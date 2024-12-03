@@ -2,6 +2,9 @@
 CREATE DATABASE IF NOT EXISTS paymybuddy_test;
 USE paymybuddy_test;
 
+DROP TABLE IF EXISTS users_connections;
+DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS users;
 
 -- Creation de la table User
 CREATE TABLE IF NOT EXISTS users (
