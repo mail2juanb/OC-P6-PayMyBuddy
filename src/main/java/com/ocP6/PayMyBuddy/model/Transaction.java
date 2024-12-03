@@ -21,12 +21,12 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "sender", nullable = false)
-    private User sender;
+    private Customer sender;
 
 
     @ManyToOne
     @JoinColumn(name = "receiver", nullable = false)
-    private User receiver;
+    private Customer receiver;
 
 
     @Column()

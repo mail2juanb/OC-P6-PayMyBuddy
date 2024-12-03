@@ -1,6 +1,6 @@
 package com.ocP6.PayMyBuddy.service;
 
-import com.ocP6.PayMyBuddy.model.User;
+import com.ocP6.PayMyBuddy.model.Customer;
 
 import java.util.List;
 
@@ -10,12 +10,12 @@ public interface UserService {
 
     long countUsers();
 
-    List<User> findAll();
+    List<Customer> findAll();
 
-    List<User> getConnectionsByUserId(Long userId);
+    List<Customer> getConnectionsByUserId(Long userId);
 
-    List<User> getConnectionsByUserIdMethodB(Long userId);
+    List<Customer> getConnectionsByUserIdMethodB(Long userId);
 
-    void save(User user);
+    void save(Customer customer);
 
 }
