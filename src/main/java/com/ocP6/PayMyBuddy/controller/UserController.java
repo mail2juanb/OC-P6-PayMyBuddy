@@ -1,7 +1,7 @@
 package com.ocP6.PayMyBuddy.controller;
 
 import com.ocP6.PayMyBuddy.dto.AddUserRequest;
-import com.ocP6.PayMyBuddy.service.UserServiceImpl;
+import com.ocP6.PayMyBuddy.service.CustomerServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
 
     @Autowired
-    private UserServiceImpl userService;
+    private CustomerServiceImpl userService;
 
 
     @PostMapping("/save")

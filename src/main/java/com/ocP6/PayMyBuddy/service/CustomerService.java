@@ -4,7 +4,7 @@ import com.ocP6.PayMyBuddy.model.Customer;
 
 import java.util.List;
 
-public interface UserService {
+public interface CustomerService {
 
     String findUsernameById(Long id);
 
