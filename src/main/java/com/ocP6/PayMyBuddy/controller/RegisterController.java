@@ -39,6 +39,7 @@ public class RegisterController {
         log.debug("password = " + password);
 
         // NOTE: Envoi vers le service concerné, si une ConflictException est levée on reload la page avec ?error=true
+        // TODO: Pas top ce bloc try catch, il y a probablement mieux à faire
         try {
             customerService.createCustomer(username, email, password);
             return "redirect:/login";                                       // Redirection vers la page de connexion en cas de succès
