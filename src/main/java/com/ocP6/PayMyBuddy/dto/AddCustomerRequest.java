@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Value;
 
 @Value
-public class AddUserRequest {
+public class AddCustomerRequest {
 
     @NotBlank(message = "username shouldn't be null or blank")
     String username;
