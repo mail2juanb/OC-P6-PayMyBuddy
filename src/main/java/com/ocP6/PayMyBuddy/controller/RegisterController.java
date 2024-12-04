@@ -1,5 +1,7 @@
 package com.ocP6.PayMyBuddy.controller;
 
+import com.ocP6.PayMyBuddy.service.CustomerService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -11,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class RegisterController {
+
+    private final CustomerService customerService;
+
 
 
     @GetMapping("/register")
@@ -26,11 +32,16 @@ public class RegisterController {
                                    @RequestParam String password,
                                    Model model) {
 
+        // NOTE: Console pour vérifier ce qui est récupéré du formulaire
+        log.debug("\n");
+        log.debug(" == registerCustomer == ");
+        log.debug("username = " + username);
+        log.debug("email = " + email);
+        log.debug("password = " + password);
 
-        // Logique pour sauvegarder l'utilisateur dans la base de données
-        // Utilisez un service pour gérer l'encodage des mots de passe et la persistance
-        // Exemple :
-        // userService.registerNewUser(username, email, password);
+        // NOTE: Envoi vers le service concerné
+        customerService.createCustomer(username, email, password);
+
 
         return "redirect:/login"; // Redirection vers la page de connexion
     }

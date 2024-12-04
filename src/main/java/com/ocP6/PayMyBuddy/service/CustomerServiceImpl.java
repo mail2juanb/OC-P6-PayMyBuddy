@@ -1,18 +1,18 @@
 package com.ocP6.PayMyBuddy.service;
 
-import com.ocP6.PayMyBuddy.dto.AddUserRequest;
+import com.ocP6.PayMyBuddy.dto.AddCustomerRequest;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
 
 
-@org.springframework.stereotype.Service
+@Service
+@Slf4j
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
@@ -21,52 +21,33 @@ public class CustomerServiceImpl implements CustomerService {
     private final PasswordEncoder passwordEncoder;
 
 
-    // Méthode pour récupérer le username d'un id
-    public String findUsernameById(Long id) {
-        Optional<Customer> optionalUser = customerRepository.findById(id);          // Méthode fournie par JpaRepository
-        String username = optionalUser.get().getUsername();
-        return username;
-    }
+    public void createCustomer(String username, String email, String password){
 
-    // Méthode pour compter les utilisateurs
-    public long countUsers() {
-        return customerRepository.count();                                      // Méthode fournie par JpaRepository
-    }
+        log.debug("\n");
+        log.debug(" == createCustomer == ");
+        log.debug("username = " + username);
+        log.debug("email = " + email);
+        log.debug("password = " + password);
 
-    @Override
-    public List<Customer> findAll() {
-        return customerRepository.findAll();                                    // Méthode fournie par JpaRepository
-    }
 
-    @Transactional
-    public List<Customer> getConnectionsByUserId(Long userId) {
-        Customer customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        // TODO: Si l'email existe déjà dans la bdd alors on lève une ConflictException
+//        if(customerRepository.findByEmailIgnoreCase(email).isPresent()) {
+//            throw new ConflictException
+//
+//        }
 
-        Hibernate.initialize(customer.getConnections()); // Forcer l'initialisation
-        return customer.getConnections();
-    }
-
-    public List<Customer> getConnectionsByUserIdMethodB(Long userId) {
-        return customerRepository.getFriendsById(userId);
-    }
-
-    public void createUser(AddUserRequest request){
-
-        String hashedPassword = passwordEncoder.encode(request.getPassword());
+        String hashedPassword = passwordEncoder.encode(password);
 
         final Customer customer = Customer.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
+                .username(username)
+                .email(email)
                 .password(hashedPassword)
-                //.balance(BigDecimal.ZERO)               // Facultatif, balance à 0 par défaut
+                //FIXME: Pourquoi j'obtiens null dans la BDD alors que ça devrait être 0...
+                //.balance(BigDecimal.valueOf(0.00))               // Facultatif, balance à 0 par défaut
                 .build();
 
         customerRepository.save(customer);
     }
 
-    public void save(Customer customer) {
-        customerRepository.save(customer);
-    }
 
 }
