@@ -51,6 +51,11 @@ public class Customer {
 
     // Relation many-to-many avec d'autres users via la table Connections. Spring s'en occupe tout seul
     @ManyToMany
+    @JoinTable(
+            name = "users_connections",                                                         // Nom réel de la table intermédiaire
+            joinColumns = @JoinColumn(name = "user_id"),                                        // Nom réel de la colonne
+            inverseJoinColumns = @JoinColumn(name = "connections_id")                           // Nom réel de l'autre colonne
+    )
     private List<Customer> connections = new ArrayList<>();
 
 

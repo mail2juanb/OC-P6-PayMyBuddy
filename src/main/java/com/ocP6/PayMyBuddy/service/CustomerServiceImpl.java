@@ -2,12 +2,16 @@ package com.ocP6.PayMyBuddy.service;
 
 import com.ocP6.PayMyBuddy.exception.ConflictException;
 import com.ocP6.PayMyBuddy.model.Customer;
+import com.ocP6.PayMyBuddy.model.Transaction;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -46,6 +50,57 @@ public class CustomerServiceImpl implements CustomerService {
                 .build();
 
         customerRepository.save(customer);
+    }
+
+
+
+    public List<Customer> getConnectionsByUsername(String username) {
+
+        // NOTE: Récupérer le Customer connecté + la liste de ses amis (connections)
+        log.debug("\n");
+        Optional<Customer> customerConnected = customerRepository.findByUsername(username);
+
+        if (customerConnected.isPresent()) {
+            log.debug("L'id de l'utilisateur connecté est {}", customerConnected.get().getId().intValue());
+            List<Customer> connections = customerConnected.get().getConnections();
+            log.debug("Nombre d'amis de l'utilisateur connecté : {}", connections.stream().count());
+
+            if (connections.stream().count() > 0) {
+                int j = 0;
+                for (Customer customer : connections) {
+                    j++;
+                    log.debug("{} : ami = {}", j, customer.getUsername());
+                }
+                log.debug("\n");
+            }
+            return connections;
+        }
+        return null;
+    }
+
+
+
+    public List<Transaction> getTransactionsByUsername(String username) {
+
+        // NOTE: Récupérer le Customer connecté + la liste des transactions envoyées (sentTransactions)
+        log.debug("\n");
+        Optional<Customer> customerConnected = customerRepository.findByUsername(username);
+
+        if (customerConnected.isPresent()) {
+            List<Transaction> sentTransactions = customerConnected.get().getSentTransactions();
+            log.debug("Nombre de transactions envoyées de l'utilisateur connecté : {}", sentTransactions.stream().count());
+
+            if (sentTransactions.stream().count() > 0) {
+                int i = 0;
+                for (Transaction transaction : sentTransactions) {
+                    i++;
+                    log.debug("{} : Transaction envoyée à {}, pour un montant de {}", i, transaction.getReceiver().getUsername(), transaction.getAmount());
+                }
+                log.debug("\n");
+            }
+            return sentTransactions;
+        }
+        return null;
     }
 
 

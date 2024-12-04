@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     FOREIGN KEY (receiver) REFERENCES Users(id)          -- Contrainte de cle etrangere vers la table Users pour le champ receiver
 );
 
--- Creation de la table user_connections
+-- Creation de la table users_connections
 CREATE TABLE IF NOT EXISTS users_connections (
     user_id             BIGINT NOT NULL,                           -- Identifiant de l'utilisateur, cle etrangere
     connections_id      BIGINT NOT NULL,                           -- Identifiant de l'ami, cle etrangere
