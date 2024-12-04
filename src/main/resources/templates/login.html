@@ -15,16 +15,17 @@
             <button type="submit">Se connecter</button>
         </form>
 
+        <!-- Message d'erreur -->
+        <div th:if="${param.error}" class="error-message">
+            Wrong username or password.
+        </div>
+
         <!-- Bouton pour aller à la page d'inscription -->
         <div class="register-link">
             <p>Pas encore de compte ?</p>
             <a th:href="@{/register}" class="register-button">S'inscrire</a>
         </div>
 
-        <!-- Message d'erreur -->
-        <div th:if="${param.error}" class="error-message">
-            Nom d'utilisateur ou mot de passe incorrect.
-        </div>
     </div>
 </body>
 </html>
