@@ -1,6 +1,6 @@
 package com.ocP6.PayMyBuddy.service;
 
-import com.ocP6.PayMyBuddy.dto.AddCustomerRequest;
+import com.ocP6.PayMyBuddy.exception.ConflictException;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 
 
 @Service
@@ -30,11 +29,11 @@ public class CustomerServiceImpl implements CustomerService {
         log.debug("password = " + password);
 
 
-        // TODO: Si l'email existe déjà dans la bdd alors on lève une ConflictException
-//        if(customerRepository.findByEmailIgnoreCase(email).isPresent()) {
-//            throw new ConflictException
-//
-//        }
+        // NOTE: Si l'email existe déjà dans la bdd alors on lève une ConflictException
+        if(customerRepository.findByEmailIgnoreCase(email).isPresent()) {
+            throw new ConflictException("Email already exist -> " + email);
+
+        }
 
         String hashedPassword = passwordEncoder.encode(password);
 
