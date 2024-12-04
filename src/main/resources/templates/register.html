@@ -16,9 +16,9 @@
         <button type="submit">S'inscrire</button>
     </form>
 
-    <!-- Message d'erreur -->
+    <!-- Section pour afficher le message d'erreur -->
     <div th:if="${param.error}" class="error-message">
-        Une erreur est survenue lors de la création du compte. Veuillez réessayer.
+        <p>Email already exists. Please try another one.</p>
     </div>
 </div>
 </body>

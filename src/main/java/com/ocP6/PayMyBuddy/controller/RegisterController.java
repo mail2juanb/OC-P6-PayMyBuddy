@@ -1,11 +1,10 @@
 package com.ocP6.PayMyBuddy.controller;
 
+import com.ocP6.PayMyBuddy.exception.ConflictException;
 import com.ocP6.PayMyBuddy.service.CustomerService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,11 +38,19 @@ public class RegisterController {
         log.debug("email = " + email);
         log.debug("password = " + password);
 
-        // NOTE: Envoi vers le service concerné
-        customerService.createCustomer(username, email, password);
+        // NOTE: Envoi vers le service concerné, si une ConflictException est levée on reload la page avec ?error=true
+        try {
+            customerService.createCustomer(username, email, password);
+            return "redirect:/login";                                       // Redirection vers la page de connexion en cas de succès
+
+        } catch (ConflictException exception) {
+            log.error("Error during registration: {}", exception.getMessage());
+            return "redirect:/register?error=true";                         // Retourner la vue pour affichage de l'erreur
+
+        }
 
 
-        return "redirect:/login"; // Redirection vers la page de connexion
+
     }
 
 }
