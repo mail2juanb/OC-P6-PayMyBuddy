@@ -29,7 +29,6 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
                 // Configuring secure headers
                 .headers(headers -> headers
                         .contentTypeOptions(Customizer.withDefaults())  // Ajoute X-Content-Type-Options: nosniff
@@ -41,6 +40,10 @@ public class SpringSecurityConfig {
                                 .includeSubDomains(true))               // Inclut les sous-domaines
                         .permissionsPolicy(policy -> policy.policy("geolocation=(), microphone=(), camera=()"))         // Restrictions navigateur
                 )
+
+                // CSRF configuration (reactivated to protect sensitive transactions)
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/css/**", "/login", "/register"))
+                //.csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PERMIT_ALL).permitAll()
