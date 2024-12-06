@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -101,6 +99,14 @@ public class CustomerServiceImpl implements CustomerService {
             return sentTransactions;
         }
         return null;
+    }
+
+
+
+    public String getEmailByUsername(String username) {
+
+        Optional<Customer> customer = customerRepository.findByUsername(username);
+        return customer.map(Customer::getEmail).orElse(null);
     }
 
 

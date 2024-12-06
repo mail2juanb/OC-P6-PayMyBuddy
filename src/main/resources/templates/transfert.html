@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +10,8 @@
     <header class="navbar">
         <h1>Pay My Buddy</h1>
         <nav>
-            <a href="#">Transférer</a>
-            <a href="#">Profil</a>
+            <a th:href="@{transfert}" class="active">Transférer</a>
+            <a th:href="@{profil}">Profil</a>
             <a href="#">Ajouter relation</a>
             <a href="#">Se déconnecter</a>
         </nav>

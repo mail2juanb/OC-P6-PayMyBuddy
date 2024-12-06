@@ -14,4 +14,6 @@ public interface CustomerService {
 
     List<Transaction> getTransactionsByUsername(String username);
 
+    String getEmailByUsername(String username);
+
 }
