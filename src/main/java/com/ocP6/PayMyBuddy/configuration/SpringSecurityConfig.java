@@ -4,9 +4,7 @@ package com.ocP6.PayMyBuddy.configuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,18 +27,6 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                // Configuring secure headers
-                .headers(headers -> headers
-                        .contentTypeOptions(Customizer.withDefaults())  // Ajoute X-Content-Type-Options: nosniff
-                        .defaultsDisabled()                             // Désactive les headers par défaut pour une configuration personnalisée
-                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; script-src 'self'"))    // Politique CSP stricte
-                        .frameOptions(frame -> frame.sameOrigin())      // Autorise les iframes du même domaine
-                        .httpStrictTransportSecurity(hsts -> hsts       // HTTPS forcé
-                                .maxAgeInSeconds(31536000)              // 1 an
-                                .includeSubDomains(true))               // Inclut les sous-domaines
-                        .permissionsPolicy(policy -> policy.policy("geolocation=(), microphone=(), camera=()"))         // Restrictions navigateur
-                )
-
                 // CSRF configuration (reactivated to protect sensitive transactions)
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/css/**", "/login", "/register"))
                 //.csrf(AbstractHttpConfigurer::disable)
@@ -60,6 +46,13 @@ public class SpringSecurityConfig {
                         .failureUrl("/login?error=true")     // Rediriger après échec
                         .permitAll()                                            // Accessible à tous
                 )
+
+                // Session configuration
+                .sessionManagement(session -> session
+                        .maximumSessions(1)                         // Limite à une session par utilisateur
+                        .maxSessionsPreventsLogin(true)             // Bloque la connexion si une session existe déjà
+                )
+
                 .build();
 
     }
