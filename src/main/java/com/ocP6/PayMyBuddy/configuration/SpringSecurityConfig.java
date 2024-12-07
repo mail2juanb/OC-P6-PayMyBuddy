@@ -45,18 +45,20 @@ public class SpringSecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/css/**", "/login", "/register"))
                 //.csrf(AbstractHttpConfigurer::disable)
 
+                // Authorisation management
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PERMIT_ALL).permitAll()
-                        .anyRequest().authenticated()                               // Toutes les requêtes nécessitent une authentification
+                        .requestMatchers(PERMIT_ALL).permitAll()                    // Autoriser les endpoints publics
+                        .anyRequest().authenticated()                               // Requiert une authentification pour le reste
                 )
-                .userDetailsService(customUserDetailsService)                       // Utilise CustomUserDetailsService pour charger les utilisateurs
+                // Authentication configuration
+                .userDetailsService(customUserDetailsService)                   // Service pour charger les utilisateurs
                 .formLogin(form -> form
-                        .loginPage("/login")                                        // Page de connexion PayMyBuddy
-                        .usernameParameter("email")
-                        .passwordParameter("password")
-                        .defaultSuccessUrl("/transfert")                            // Redirige après authentification réussie
-                        .failureUrl("/login?error=true")         // Paramètre en cas d'échec
-                        .permitAll()
+                        .loginPage("/login")                                    // Page de connexion personnalisée
+                        .usernameParameter("email")                             // Paramètre pour l'email
+                        .passwordParameter("password")                          // Paramètre pour le mot de passe
+                        .defaultSuccessUrl("/transfert")                        // Rediriger après authentification réussie
+                        .failureUrl("/login?error=true")     // Rediriger après échec
+                        .permitAll()                                            // Accessible à tous
                 )
                 .build();
 
