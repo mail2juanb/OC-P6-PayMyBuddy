@@ -34,18 +34,11 @@ public class CustomerServiceImpl implements CustomerService {
         // NOTE: Si l'email existe déjà dans la bdd alors on lève une ConflictException
         if(customerRepository.findByEmailIgnoreCase(email).isPresent()) {
             throw new ConflictException("Email already exist -> " + email);
-
         }
 
         String hashedPassword = passwordEncoder.encode(password);
 
-        final Customer customer = Customer.builder()
-                .username(username)
-                .email(email)
-                .password(hashedPassword)
-                //FIXME: Pourquoi j'obtiens null dans la BDD alors que ça devrait être 0...
-                //.balance(BigDecimal.valueOf(0.00))               // Facultatif, balance à 0 par défaut
-                .build();
+        final Customer customer =  new Customer(username, email, hashedPassword);
 
         customerRepository.save(customer);
     }

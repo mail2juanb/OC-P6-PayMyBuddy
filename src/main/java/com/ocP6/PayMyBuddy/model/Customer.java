@@ -36,7 +36,7 @@ public class Customer {
 
 
     @Column(nullable = false, precision = 65, scale = 2)
-    private BigDecimal balance = BigDecimal.ZERO;
+    private BigDecimal balance = BigDecimal.ZERO.setScale(2);
 
 
     // Relation avec les transactions en tant que Sender
@@ -58,5 +58,13 @@ public class Customer {
     )
     private List<Customer> connections = new ArrayList<>();
 
+
+    // Constructeur pour l'ajout d'un nouveau Customer dans la BDD
+    public Customer(String username, String email, String password){
+        this.username = username;
+        this.email = email;
+        this.password = password;
+
+    }
 
 }
