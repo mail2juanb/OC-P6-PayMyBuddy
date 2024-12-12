@@ -46,7 +46,14 @@ public class SpringSecurityConfig {
                         .failureUrl("/login?error=true")     // Rediriger après échec
                         .permitAll()                                            // Accessible à tous
                 )
-
+                // logout configuration
+                .logout(logout -> logout
+                        .logoutUrl("/logout")                                   // URL pour la déconnexion
+                        .logoutSuccessUrl("/login?logout=true")                 // Redirection après déconnexion
+                        .deleteCookies("JSESSIONID")         // Supprime le cookie de session
+                        .invalidateHttpSession(true)                            // Invalide la session actuelle
+                        .permitAll()                                            // Accessible à tous
+                )
                 // Session configuration
                 .sessionManagement(session -> session
                         .maximumSessions(1)                         // Limite à une session par utilisateur

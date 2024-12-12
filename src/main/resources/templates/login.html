@@ -15,9 +15,14 @@
             <button type="submit">Se connecter</button>
         </form>
 
-        <!-- Message d'erreur -->
+        <!-- Message d'erreur d'input au login -->
         <div th:if="${param.error}" class="error-message">
             Wrong username or password.
+        </div>
+
+        <!-- Message de logout -->
+        <div th:if="${param.logout}" class="logout-message">
+            Vous avez été déconnecté avec succès.
         </div>
 
         <!-- Bouton pour aller à la page d'inscription -->

@@ -64,3 +64,10 @@ body {
     padding: 10px;
     margin: 10px 0;
 }
+
+/* Message de logout */
+.logout-message {
+    color: green;
+    font-weight: bold;
+    margin: 10px 0;
+}
