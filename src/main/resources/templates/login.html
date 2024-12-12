@@ -20,17 +20,17 @@
             Wrong username or password.
         </div>
 
-        <!-- Message de logout -->
-        <div th:if="${param.logout}" class="logout-message">
-            Vous avez été déconnecté avec succès.
-        </div>
-
         <!-- Bouton pour aller à la page d'inscription -->
         <div class="register-link">
             <p>Pas encore de compte ?</p>
             <a th:href="@{/register}" class="register-button">S'inscrire</a>
         </div>
 
+<!--        TODO: Pourquoi le css ne fonctionne pas -->
+        <!-- Message de logout -->
+        <div th:if="${param.logout}" class="logout-message">
+            Vous avez été déconnecté avec succès.
+        </div>
     </div>
 </body>
 </html>
