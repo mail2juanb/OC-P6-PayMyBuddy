@@ -3,10 +3,7 @@ package com.ocP6.PayMyBuddy.repository;
 import com.ocP6.PayMyBuddy.model.Customer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.math.BigDecimal;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +14,7 @@ class CustomerRepositoryTest {
     @Autowired
     private CustomerRepository customerRepository;
 
+    // TODO: Transformer en test paramétrisé pour vérifier le IgnoreCase
     @Test
     void findByEmailIgnoreCase_shouldReturnCustomer() {
 
@@ -26,7 +24,7 @@ class CustomerRepositoryTest {
         // When try to find customer by email
         Optional<Customer> result = customerRepository.findByEmailIgnoreCase(email);
 
-        // Then check that customer founded
+        // Then return Customer
         assertTrue(result.isPresent());
         assertEquals("user@user.com", result.get().getEmail());
 
@@ -38,16 +36,42 @@ class CustomerRepositoryTest {
 
         // Given an unknown email
         String email = "unknown@user.com";
-        String errorMessage = "A_Remplir";
 
         // When try to find customer by email
         Optional<Customer> result = customerRepository.findByEmailIgnoreCase(email);
 
-        // Then check that customer founded
+        // Then return Empty
         assertFalse(result.isPresent());
-        // TODO: Vérifier qu'une NotFoundException est levée
-        // TODO: Vérifier que le message renvoyé est conforme
 
     }
 
+    @Test
+    void findByUsername_shouldReturnCustomer(){
+
+        // Given a username
+        String username = "user";
+
+        // When try to find customer by username
+        Optional<Customer> result = customerRepository.findByUsername(username);
+
+        // Then return Customer
+        assertTrue(result.isPresent());
+        assertEquals("user", result.get().getUsername());
+
+    }
+
+
+    @Test
+    void findByUsername_shouldReturnEmpty() {
+
+        // Given a username
+        String username = "unknown";
+
+        // When try to find customer by username
+        Optional<Customer> result = customerRepository.findByUsername(username);
+
+        // Then return Empty
+        assertFalse(result.isPresent());
+
+    }
 }
