@@ -18,10 +18,14 @@
     </header>
     <main class="container">
         <h2>Chercher une relation</h2>
-        <section class="form-section">
+        <form th:action="@{/connection}" method="post" class="form-section">
             <input type="email" name="email" placeholder="Saisir une adresse mail" required>
             <button type="submit">Ajouter</button>
-        </section>
+        </form>
+        <!-- Message d'erreur -->
+        <div th:if="${param.error}" class="connection-error">
+            L'utilisateur fait déjà parti de votre liste de relation.
+        </div>
     </main>
 </body>
 </html>

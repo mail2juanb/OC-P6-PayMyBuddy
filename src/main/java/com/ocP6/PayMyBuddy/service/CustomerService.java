@@ -16,4 +16,6 @@ public interface CustomerService {
 
     String getEmailByUsername(String username);
 
+    void addConnection(String username, String email);
+
 }

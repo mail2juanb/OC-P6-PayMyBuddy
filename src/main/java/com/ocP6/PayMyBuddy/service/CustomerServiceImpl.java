@@ -1,6 +1,7 @@
 package com.ocP6.PayMyBuddy.service;
 
 import com.ocP6.PayMyBuddy.exception.ConflictException;
+import com.ocP6.PayMyBuddy.exception.NotFoundException;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.model.Transaction;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
@@ -100,6 +101,44 @@ public class CustomerServiceImpl implements CustomerService {
 
         Optional<Customer> customer = customerRepository.findByUsername(username);
         return customer.map(Customer::getEmail).orElse(null);
+    }
+
+    public void addConnection(String username, String email) {
+
+        // NOTE: Récupère l'id du username. Pas besoin de vérifier si le username existe puisqu'il est connecté
+        Optional<Customer> customer = customerRepository.findByUsername(username);
+        Long customerId = customer.get().getId();
+
+        log.debug("\n");
+        log.debug("ID de l'Utilisateur connecté : {}", customerId.toString());
+        log.debug("\n");
+
+
+        // NOTE: Vérifier si l'email existe et donc récupérer le Customer via l'email
+        Optional<Customer> addCustomer = customerRepository.findByEmailIgnoreCase(email);
+        if(addCustomer.isEmpty()) {
+            throw new NotFoundException("Email doesn't exist -> " + email);
+        }
+
+        // NOTE: Récupère l'id correspondant à l'email
+        Long addCustomerId = addCustomer.get().getId();
+
+        log.debug("\n");
+        log.debug("ID du customer que l'on souhaite ajouter en ami : {}", addCustomerId.toString());
+        log.debug("\n");
+
+
+        // NOTE: Vérifier que les 2 Customer ne sont pas déjà amis
+        List<Customer> connections = customer.get().getConnections();
+        if(connections.contains(addCustomer)) {
+            throw new ConflictException("Already friend with -> " + email);
+        }
+
+
+        // NOTE: Ajouter la relation entre eux
+        customer.get().getConnections().add(addCustomer.get());
+        customerRepository.save(customer.get());
+
     }
 
 

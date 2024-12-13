@@ -78,3 +78,12 @@ body {
 .form-section button:hover {
     background-color: #cc8400;
 }
+
+/* Message de connection */
+.connection-error {
+    color: red;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px;
+    margin: 10px 0;
+}

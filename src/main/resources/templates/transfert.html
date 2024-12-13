@@ -22,6 +22,10 @@
         </nav>
     </header>
     <main class="container">
+        <!-- Message ajout de connection -->
+        <div th:if="${param.connection}" class="connection-message">
+            Votre liste de relation a été mise à jour.
+        </div>
         <section class="form-section">
             <select name="relation" required>
                 <option value="" disabled selected>Sélectionner une relation</option>

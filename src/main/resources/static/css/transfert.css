@@ -91,3 +91,12 @@ body {
 .transactions-table th {
     background-color: #f2f2f2;
 }
+
+/* Message de connection */
+.connection-message {
+    color: green;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px;
+    margin: 10px 0;
+}
