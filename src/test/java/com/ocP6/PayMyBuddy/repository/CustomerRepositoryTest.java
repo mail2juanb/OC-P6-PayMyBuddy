@@ -2,9 +2,13 @@ package com.ocP6.PayMyBuddy.repository;
 
 import com.ocP6.PayMyBuddy.model.Customer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Optional;
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -14,12 +18,11 @@ class CustomerRepositoryTest {
     @Autowired
     private CustomerRepository customerRepository;
 
-    // TODO: Transformer en test paramétrisé pour vérifier le IgnoreCase
-    @Test
-    void findByEmailIgnoreCase_shouldReturnCustomer() {
+    @ParameterizedTest
+    @MethodSource("provideValidEmail")
+    void findByEmailIgnoreCase_shouldReturnCustomer(String email) {
 
-        // Given a known email
-        String email = "user@user.com";
+        // Given a known email by provideValidEmail
 
         // When try to find customer by email
         Optional<Customer> result = customerRepository.findByEmailIgnoreCase(email);
@@ -28,6 +31,15 @@ class CustomerRepositoryTest {
         assertTrue(result.isPresent());
         assertEquals("user@user.com", result.get().getEmail());
 
+    }
+
+    // Returns Valid email
+    static Stream<String> provideValidEmail() {
+        String email1 = "user@user.com";
+        String email2 = "User@user.com";
+        String email3 = "user@User.com";
+
+        return Stream.of(email1, email2, email3);
     }
 
 
