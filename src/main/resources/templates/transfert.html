@@ -15,8 +15,10 @@
             <a th:href="@{connection}">Ajouter relation</a>
 
 <!--            TODO: Remplacer le bouton, graphiquement c'est pas top-->
+<!--            TODO: Mieux mais erreur lors du relog-->
             <form th:action="@{/logout}" method="post" style="display: inline;">
-                <button type="submit" class="logout-button">Se déconnecter</button>
+                <a href="javascript:void(0)" onclick="this.closest('form').submit()" >Se déconnecter</a>
+<!--                <button type="submit" >Se déconnecter</button>-->
             </form>
 
         </nav>
