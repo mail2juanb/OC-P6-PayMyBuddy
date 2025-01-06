@@ -22,9 +22,13 @@
             <input type="email" name="email" placeholder="Saisir une adresse mail" required>
             <button type="submit">Ajouter</button>
         </form>
-        <!-- Message d'erreur pour ConflictException -->
-        <div th:if="${param.errorconflict}" class="connection-error">
+        <!-- Message d'erreur pour ConflictException - Already -->
+        <div th:if="${param.errorconflictalready}" class="connection-error">
             L'utilisateur fait déjà partie de votre liste de relation.
+        </div>
+        <!-- Message d'erreur pour ConflictException -->
+        <div th:if="${param.errorconflictyourself}" class="connection-error">
+            Vous ne pouvez être ami avec vous même.
         </div>
         <!-- Message d'erreur pour NotFoundException -->
         <div th:if="${param.errornotfound}" class="connection-error">

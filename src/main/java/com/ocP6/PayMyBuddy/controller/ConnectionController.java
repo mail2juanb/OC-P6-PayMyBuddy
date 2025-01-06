@@ -35,13 +35,18 @@ public class ConnectionController {
         // NOTE: Demande au service d'ajouter une connection
         try {
             customerService.addConnection(username, email);
-            return "redirect:/transfert?connection=true";                       // Redirection vers la page de transfert en cas de succès
+            return "redirect:/transfert?connection=true";                                   // Redirection vers la page de transfert en cas de succès
         } catch (NotFoundException exception) {
             log.error("NotFoundException during add a friend: {}", exception.getMessage());
-            return "redirect:/connection?errornotfound=true";                           // Retourner la vue pour affichage de l'erreur - NotFoundException
+            return "redirect:/connection?errornotfound=true";                               // Retourner la vue pour affichage de l'erreur - NotFoundException
         } catch (ConflictException exception) {
             log.error("ConflictException during add a friend: {}", exception.getMessage());
-            return "redirect:/connection?errorconflict=true";                           // Retourner la vue pour affichage de l'erreur - ConflictException
+            if (exception.getMessage().contains("yourself")) {
+                return "redirect:/connection?errorconflictyourself=true";                           // Retourner la vue pour affichage de l'erreur - ConflictException - yourself
+            } else {
+                return "redirect:/connection?errorconflictalready=true";                           // Retourner la vue pour affichage de l'erreur - ConflictException - Already exist
+            }
+
         }
     }
 
