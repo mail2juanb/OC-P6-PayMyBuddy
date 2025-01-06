@@ -105,6 +105,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     public void addConnection(String username, String email) {
 
+        log.debug("\n");
+        log.debug("DECLENCHEMENT PROCEDURE POUR AJOUTER UN AMI");
+        log.debug("\n");
+
+
         // NOTE: Récupère l'id du username. Pas besoin de vérifier si le username existe puisqu'il est connecté
         Optional<Customer> customer = customerRepository.findByUsername(username);
         Long customerId = customer.get().getId();
@@ -130,7 +135,16 @@ public class CustomerServiceImpl implements CustomerService {
 
         // NOTE: Vérifier que les 2 Customer ne sont pas déjà amis
         List<Customer> connections = customer.get().getConnections();
-        if(connections.contains(addCustomer)) {
+
+        log.debug("\n");
+        log.debug("Vérification de la liste des amis");
+        log.debug("Nombre de Customer present dans la liste : {}", connections.size());
+        for (Customer connection : connections) {
+            log.debug("Customer id : {}, Csutomer username : {}", connection.getId(), connection.getUsername());
+        }
+        log.debug("\n");
+
+        if(connections.stream().anyMatch(c -> c.getId().equals(addCustomerId))) {
             throw new ConflictException("Already friend with -> " + email);
         }
 

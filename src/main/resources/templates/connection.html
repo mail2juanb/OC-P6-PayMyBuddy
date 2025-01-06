@@ -22,9 +22,13 @@
             <input type="email" name="email" placeholder="Saisir une adresse mail" required>
             <button type="submit">Ajouter</button>
         </form>
-        <!-- Message d'erreur -->
-        <div th:if="${param.error}" class="connection-error">
-            L'utilisateur fait déjà parti de votre liste de relation.
+        <!-- Message d'erreur pour ConflictException -->
+        <div th:if="${param.errorconflict}" class="connection-error">
+            L'utilisateur fait déjà partie de votre liste de relation.
+        </div>
+        <!-- Message d'erreur pour NotFoundException -->
+        <div th:if="${param.errornotfound}" class="connection-error">
+            L'utilisateur est introuvable.
         </div>
     </main>
 </body>
