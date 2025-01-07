@@ -4,6 +4,7 @@ package com.ocP6.PayMyBuddy.configuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,14 +55,15 @@ public class SpringSecurityConfig {
                         .invalidateHttpSession(true)                            // Invalide la session actuelle
                         .permitAll()                                            // Accessible à tous
                 )
+                // Exceptions configuration
+                .exceptionHandling(Customizer.withDefaults()
+                )
                 // Session configuration
                 .sessionManagement(session -> session
                         .maximumSessions(1)                         // Limite à une session par utilisateur
-                        .maxSessionsPreventsLogin(true)             // Bloque la connexion si une session existe déjà
+                        //.maxSessionsPreventsLogin(true)             // Bloque la connexion si une session existe déjà - Génère une erreur à la reconnection
                 )
-
                 .build();
-
     }
 }
 
