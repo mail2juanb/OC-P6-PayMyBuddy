@@ -4,13 +4,11 @@ import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 
 @Slf4j
 @Service
@@ -26,7 +24,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         Customer customer = customerRepository.findByEmailIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Customer not found with email : " + username));
 
-        return new User(customer.getUsername(), customer.getPassword(),new ArrayList<>());                                               // Aucune autorité spécifique, tous les utilisateurs ont le même accès
+        //return new User(customer.getUsername(), customer.getPassword(),new ArrayList<>());                            // Aucune autorité spécifique, tous les utilisateurs ont le même accès
+        return new CustomUserDetails(customer);                                                                         // Aucune autorité spécifique, tous les utilisateurs ont le même accès
     }
 
 }

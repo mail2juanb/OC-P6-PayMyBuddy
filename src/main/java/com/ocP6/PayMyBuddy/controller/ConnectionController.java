@@ -1,5 +1,6 @@
 package com.ocP6.PayMyBuddy.controller;
 
+import com.ocP6.PayMyBuddy.configuration.SecurityTools;
 import com.ocP6.PayMyBuddy.exception.ConflictException;
 import com.ocP6.PayMyBuddy.exception.NotFoundException;
 import com.ocP6.PayMyBuddy.service.CustomerService;
@@ -26,10 +27,13 @@ public class ConnectionController {
         return "connection";
     }
 
-    @PostMapping("/connection")
-    public String addConnection(@RequestParam String email, Principal principal, Model model) {
+        @PostMapping("/connection")
+    public String addConnection(@RequestParam String email, Principal principal) {
 
-        // NOTE: Récupère le username
+        // NOTE: Récupère l'id de l'utilisateur connecté
+        Long userId = SecurityTools.getConnectedUser().getId();
+        log.error("ID CONNECTED = {}", userId);
+
         String username = principal.getName();
 
         // NOTE: Demande au service d'ajouter une connection
