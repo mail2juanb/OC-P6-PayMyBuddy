@@ -22,5 +22,7 @@ VALUES
 INSERT INTO users_connections (user_id, connections_id)
 VALUES
 (1, 2),
-(1, 3);
+(2, 1),
+(1, 3),
+(3, 1);
 

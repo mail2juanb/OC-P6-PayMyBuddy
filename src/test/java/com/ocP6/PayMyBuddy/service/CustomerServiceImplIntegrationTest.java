@@ -14,12 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 @SpringBootTest
@@ -62,6 +62,9 @@ class CustomerServiceImplIntegrationTest {
                 } );
     }
 
+
+
+    //FIXME: Supprimer le @Transactional
     @Test
     @Transactional
     void getConnectionsByUsername_shouldReturnCustomerConnectionList() {
@@ -83,6 +86,7 @@ class CustomerServiceImplIntegrationTest {
 
 
 
+    //FIXME: Suuprimer le @Transactional
     @Test
     @Transactional
     void getTransactionsByUsername_shouldReturnTransactionList() {
@@ -100,6 +104,7 @@ class CustomerServiceImplIntegrationTest {
                     assertThat(user.getSentTransactions().size()).isEqualTo(2);
                 } );
     }
+
 
 
     @Test
@@ -120,72 +125,92 @@ class CustomerServiceImplIntegrationTest {
     }
 
 
+
+    // FIXME: LazyInitializationException without @Transactional
     @Test
     @Transactional
     void addConnection_shouldAddConnection() {
 
         // Given a known username and email to add
+        final Long customerId = 1L;
         final String username = "user";
         final String email = "copain@copain.com";
 
         // When try to add connection
-        customerService.addConnection(username, email);
+        customerService.addConnection(customerId, email);
 
         // Then
-        Optional<Customer> customer = customerRepository.findByUsername(username);
+        Customer customer = customerRepository.findById(customerId)
+                        .orElseThrow();
+
         assertThat(customer)
-                .isPresent()
-                .get()
                 .satisfies(user -> {
-                   assertThat(user.getUsername()).isEqualTo(username);
-                   assertThat(user.getConnections()).isNotNull();
-                   assertThat(user.getConnections())
-                           .extracting("email")
-                           .contains(email);
+                    assertThat(user.getUsername()).isEqualTo(username);
+                    assertThat(user.getConnections()).isNotNull();
+                    assertThat(user.getConnections())
+                            .extracting("email")
+                            .contains(email);
                 });
     }
 
 
+
     @Test
-    void addConnection_shouldThrowNotFoundException_whenEmailNotFound() {
+    void addConnection_shouldThrowNotFoundException_whenIdNotFound() {
 
         // Given a known username and unknown email
-        final String username = "user";
+        final Long customerId = 1L;
         final String email = "unknownCopain@copain.com";
 
         // When try to add connections // Then NotFoundException is thrown
-        assertThatThrownBy(() -> customerService.addConnection(username, email))
+        assertThatThrownBy(() -> customerService.addConnection(customerId, email))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("not found");
     }
 
 
+
+    @Test
+    void addConnection_shouldThrowNotFoundException_whenEmailNotFound() {
+
+        // Given a known id and unknown email
+        final Long customerId = 1L;
+        final String email = "unknownCopain@copain.com";
+
+        // When try to add connections // Then NotFoundException is thrown
+        assertThatThrownBy(() -> customerService.addConnection(customerId, email))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("not found");
+    }
+
+
+
     @Test
     void addConnection_shouldThrowConflictException_whenSelfUsername() {
 
-        // Given a known username and email
-        final String username = "user";
+        // Given a known id and email
+        final Long customerId = 1L;
         final String email = "user@user.com";
 
         // When try to add connections // Then NotFoundException is thrown
-        assertThatThrownBy(() -> customerService.addConnection(username, email))
+        assertThatThrownBy(() -> customerService.addConnection(customerId, email))
                 .isInstanceOf(ConflictException.class)
                 .hasMessageContaining("yourself");
     }
 
 
+
     @Test
-    @Transactional
     void addConnection_shouldThrowConflictException_whenEmailAlreadyExistInList() {
 
         // Given a known username and email
-        final String username = "user";
+        final Long customerId = 1L;
         final String email = "friend@friend.com";
 
         // When try to add connections // Then NotFoundException is thrown
-        assertThatThrownBy(() -> customerService.addConnection(username, email))
+        assertThatThrownBy(() -> customerService.addConnection(customerId, email))
                 .isInstanceOf(ConflictException.class)
-                .hasMessageContaining("Already");
+                .hasMessageContaining("already");
     }
 
 }

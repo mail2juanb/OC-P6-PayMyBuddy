@@ -5,12 +5,12 @@ import com.ocP6.PayMyBuddy.exception.NotFoundException;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.model.Transaction;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -25,13 +25,6 @@ public class CustomerServiceImpl implements CustomerService {
     // NOTE: Ecrire le test passant                         - OK
     // NOTE: Ecrire le test non passant : ConflictException - OK
     public void createCustomer(String username, String email, String password){
-
-//        log.debug("\n");
-//        log.debug(" == createCustomer == ");
-//        log.debug("username = " + username);
-//        log.debug("email = " + email);
-//        log.debug("password = " + password);
-
 
         // NOTE: Si l'email existe déjà dans la bdd alors on lève une ConflictException
         if(customerRepository.findByEmailIgnoreCase(email).isPresent()) {
@@ -100,12 +93,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
+
     // NOTE: Ecrire le test passant                         - OK
     // NOTE: Ecrire le test non passant : NotFoundException - OK
     public String getEmailByUsername(String username) {
-
-//        Optional<Customer> customer = customerRepository.findByUsername(username);
-//        return customer.map(Customer::getEmail).orElse(null);
 
         return customerRepository.findByUsername(username)
                 .map(Customer::getEmail)
@@ -114,62 +105,43 @@ public class CustomerServiceImpl implements CustomerService {
 
 
 
-    // NOTE: Ecrire le test passant                         - OK
-    // NOTE: Ecrire le test non passant : NotFoundException - OK
-    // NOTE: Ecrire le test non passant : ConflictException - OK
-    public void addConnection(String username, String email) {
+    // FIXME: Ecrire le test passant                                             - NoOk - LazyInitializationException
+    // NOTE: Ecrire le test non passant : NotFoundException - Id not found      - OK
+    // NOTE: Ecrire le test non passant : NotFoundException - Email not found   - OK
+    // NOTE: Ecrire le test non passant : ConflictException - yourself          - OK
+    // NOTE: Ecrire le test non passant : ConflictException - already           - OK
+    @Transactional
+    public void addConnection(Long customerId, String email) {
 
-//        log.debug("\n");
-//        log.debug("DECLENCHEMENT PROCEDURE POUR AJOUTER UN AMI");
-//        log.debug("\n");
+        // NOTE: Récupère le customer correspondant à l'id.
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new NotFoundException("Id not found -> " + customerId));
 
+        // NOTE: Vérifier si l'email existe.
+        Customer addCustomer = customerRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new NotFoundException("Email not found -> " + email));
 
-        // NOTE: Récupère l'id du username. Pas besoin de vérifier si le username existe puisqu'il est connecté
-        Optional<Customer> customer = customerRepository.findByUsername(username);
-        Long customerId = customer.get().getId();
+        // NOTE: Récupère l'id correspondant à l'email
+        Long addCustomerId = addCustomer.getId();
 
-//        log.debug("\n");
-//        log.debug("ID de l'Utilisateur connecté : {}", customerId.toString());
-//        log.debug("\n");
-
-
-        // NOTE: Vérifier si l'email existe et donc récupérer le Customer via l'email
-        Optional<Customer> addCustomer = customerRepository.findByEmailIgnoreCase(email);
-        if(addCustomer.isEmpty()) {
-            throw new NotFoundException("Email not found -> " + email);
-        } else if (addCustomer.get().getId().equals(customerId)) {
+        // NOTE: Vérifie que ce n'est pas le même customer.
+        if (addCustomerId.equals(customerId)) {
             throw new ConflictException("You can't be connected to yourself");
         }
 
-        // NOTE: Récupère l'id correspondant à l'email
-        Long addCustomerId = addCustomer.get().getId();
-
-//        log.debug("\n");
-//        log.debug("ID du customer que l'on souhaite ajouter en ami : {}", addCustomerId.toString());
-//        log.debug("\n");
-
-
         // NOTE: Vérifier que les 2 Customer ne sont pas déjà amis
-        List<Customer> connections = customer.get().getConnections();
-
-//        log.debug("\n");
-//        log.debug("Vérification de la liste des amis");
-//        log.debug("Nombre de Customer present dans la liste : {}", connections.size());
-//        for (Customer connection : connections) {
-//            log.debug("Customer id : {}, Csutomer username : {}", connection.getId(), connection.getUsername());
-//        }
-//        log.debug("\n");
+        List<Customer> connections = customer.getConnections();
 
         if(connections.stream().anyMatch(c -> c.getId().equals(addCustomerId))) {
-            throw new ConflictException("Already friend with -> " + email);
+            throw new ConflictException("You are already connected with -> " + email);
         }
 
-
         // NOTE: Ajouter la relation entre eux
-        customer.get().getConnections().add(addCustomer.get());
-        customerRepository.save(customer.get());
+        customer.getConnections().add(addCustomer);
+        customerRepository.save(customer);
+        addCustomer.getConnections().add(customer);
+        customerRepository.save(addCustomer);
 
     }
-
 
 }

@@ -7,11 +7,9 @@ import com.ocP6.PayMyBuddy.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.security.Principal;
 
 @Slf4j
 @Controller
@@ -23,28 +21,25 @@ public class ConnectionController {
 
 
     @GetMapping("/connection")
-    public String connection(Principal principal, Model model) {
+    public String connection() {
         return "connection";
     }
 
-        @PostMapping("/connection")
-    public String addConnection(@RequestParam String email, Principal principal) {
+    @PostMapping("/connection")
+    public String addConnection(@RequestParam String email) {
 
         // NOTE: Récupère l'id de l'utilisateur connecté
         Long userId = SecurityTools.getConnectedUser().getId();
-        log.error("ID CONNECTED = {}", userId);
-
-        String username = principal.getName();
 
         // NOTE: Demande au service d'ajouter une connection
         try {
-            customerService.addConnection(username, email);
+            customerService.addConnection(userId, email);
             return "redirect:/transfert?connection=true";                                   // Redirection vers la page de transfert en cas de succès
         } catch (NotFoundException exception) {
-            log.error("NotFoundException during add a friend: {}", exception.getMessage());
+            log.error("NotFoundException during addConnection: {}", exception.getMessage());
             return "redirect:/connection?errornotfound=true";                               // Retourner la vue pour affichage de l'erreur - NotFoundException
         } catch (ConflictException exception) {
-            log.error("ConflictException during add a friend: {}", exception.getMessage());
+            log.error("ConflictException during addConnection: {}", exception.getMessage());
             if (exception.getMessage().contains("yourself")) {
                 return "redirect:/connection?errorconflictyourself=true";                           // Retourner la vue pour affichage de l'erreur - ConflictException - yourself
             } else {
