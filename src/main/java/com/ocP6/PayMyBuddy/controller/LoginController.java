@@ -1,7 +1,6 @@
 package com.ocP6.PayMyBuddy.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,15 +14,18 @@ public class LoginController {
         return "redirect:/login";
     }
 
+
+
     @GetMapping("/login")
     public String login() {
         return "login";
     }
 
+
+
     @PostMapping("/login")
     public String loginRequest(@RequestParam String email,
-                               @RequestParam String password,
-                               Model model) {
+                               @RequestParam String password) {
         return "redirect:/login?success";
     }
 }

@@ -15,9 +15,14 @@
             <button type="submit">Se connecter</button>
         </form>
 
+        <!-- Message de confirmation d'inscription -->
+        <div th:if="${param.success}" class="success-message">
+            Inscription effectuée avec succès.
+        </div>
+
         <!-- Message d'erreur d'input au login -->
         <div th:if="${param.error}" class="error-message">
-            Wrong username or password.
+            Mauvais password ou username.
         </div>
 
         <!-- Bouton pour aller à la page d'inscription -->
@@ -26,9 +31,8 @@
             <a th:href="@{/register}" class="register-button">S'inscrire</a>
         </div>
 
-<!--        TODO: Pourquoi le css ne fonctionne pas -->
         <!-- Message de logout -->
-        <div th:if="${param.logout}" class="logout-message">
+        <div th:if="${param.logout}" class="success-message">
             Vous avez été déconnecté avec succès.
         </div>
     </div>

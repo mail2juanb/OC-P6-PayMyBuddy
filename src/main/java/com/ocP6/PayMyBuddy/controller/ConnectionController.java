@@ -25,6 +25,8 @@ public class ConnectionController {
         return "connection";
     }
 
+
+
     @PostMapping("/connection")
     public String addConnection(@RequestParam String email) {
 

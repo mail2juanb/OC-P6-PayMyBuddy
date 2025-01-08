@@ -64,6 +64,22 @@ class CustomerServiceImplIntegrationTest {
 
 
 
+    @Test
+    void createCustomer_shouldThrowConflictException_whenEmailAlreadyExists() {
+
+        // Given a customer already registred
+        final String username = "user";
+        final String email = "user@user.com";
+        final String rawPassword = "user";
+
+        // When the user try to be registred // Then a Conflict Exception is thrown
+        assertThatThrownBy(() -> customerService.createCustomer(username, email, rawPassword))
+                .isInstanceOf(ConflictException.class)
+                .hasMessageContaining("already exist");
+    }
+
+
+
     //FIXME: Supprimer le @Transactional
     @Test
     @Transactional

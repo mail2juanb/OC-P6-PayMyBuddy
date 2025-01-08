@@ -36,26 +36,6 @@ class CustomerServiceImplTest {
 
 
     @Test
-    void createCustomer_shouldThrowConflictException_whenEmailAlreadyExists() {
-
-        // Given a customer already registred
-        final String username = "user";
-        final String email = "user@user.com";
-        final String rawPassword = "user";
-
-        when(customerRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.of(new Customer()));
-
-        // When the user try to be registred // Then a Conflict Exception is thrown
-        assertThatThrownBy(() -> customerService.createCustomer(username, email, rawPassword))
-                .isInstanceOf(ConflictException.class)
-                .hasMessageContaining("already exist");
-        verify(customerRepository, never()).save(any(Customer.class));
-
-    }
-
-
-
-    @Test
     void getConnectionsByUsername_shouldThrowNotFoundException_whenUsernameNotFound() {
 
         // Given unknown username
