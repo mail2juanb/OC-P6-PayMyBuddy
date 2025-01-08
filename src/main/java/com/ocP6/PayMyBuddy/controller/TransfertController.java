@@ -1,5 +1,6 @@
 package com.ocP6.PayMyBuddy.controller;
 
+import com.ocP6.PayMyBuddy.configuration.SecurityTools;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.model.Transaction;
 import com.ocP6.PayMyBuddy.service.CustomerService;
@@ -9,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -24,19 +23,16 @@ public class TransfertController {
 
 
     @GetMapping("/transfert")
-    public String transfert(Principal principal, Model model) {
+    public String transfert(Model model) {
 
+        // NOTE: Récupère l'id de l'utilisateur connecté
+        Long userId = SecurityTools.getConnectedUser().getId();
 
-        // NOTE: Récupération de l'utilisateur connecté
-        log.debug("\n");
-        log.debug("Utilisateur connecté : {}", principal.getName());
-        log.debug("\n");
-
-        // NOTE: Demande au service d'envoyer la liste des amis de l'utilisateur connecté
-        List<Customer> connections = customerService.getConnectionsByUsername(principal.getName());
+        // NOTE: Demande au service de récupérer la liste des amis du customer connecté
+        List<Customer> connections = customerService.getConnectionsById(userId);
 
         // NOTE: Demande au service d'envoyer la liste des amis de l'utilisateur concerné
-        List<Transaction> transactions = customerService.getTransactionsByUsername(principal.getName());
+        List<Transaction> transactions = customerService.getTransactionsById(userId);
 
         // NOTE: Envoi des listes à la vue concernée
         model.addAttribute("connections", connections);
@@ -44,7 +40,5 @@ public class TransfertController {
 
         return "transfert";
     }
-
-
 
 }

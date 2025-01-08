@@ -10,9 +10,9 @@ public interface CustomerService {
 
     void createCustomer(String username, String email, String password);
 
-    List<Customer> getConnectionsByUsername(String username);
+    List<Customer> getConnectionsById(Long userId);
 
-    List<Transaction> getTransactionsByUsername(String username);
+    List<Transaction> getTransactionsById(Long userId);
 
     String getEmailByUsername(String username);
 

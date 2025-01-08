@@ -40,55 +40,25 @@ public class CustomerServiceImpl implements CustomerService {
 
 
 
-    // NOTE: Ecrire le test passant                         - OK
+    // FIXME: Ecrire le test passant                        - NoOk - LazyInitializationException
     // NOTE: Ecrire le test non passant - NotFoundException - OK
-    public List<Customer> getConnectionsByUsername(String username) {
+    public List<Customer> getConnectionsById(Long userId) {
 
-//        log.debug("\n");
-//        Optional<Customer> customerConnected = customerRepository.findByUsername(username);
-//        if (customerConnected.isPresent()) {
-//            log.debug("L'id de l'utilisateur connecté est {}", customerConnected.get().getId().intValue());
-//            List<Customer> connections = customerConnected.get().getConnections();
-//            log.debug("Nombre d'amis de l'utilisateur connecté : {}", connections.stream().count());
-//            if (connections.stream().count() > 0) {
-//                int j = 0;
-//                for (Customer customer : connections) {
-//                    j++;
-//                    log.debug("{} : ami = {}", j, customer.getUsername());
-//                }
-//                log.debug("\n");
-//            }
-//        }
-
-        return customerRepository.findByUsername(username)
+        return customerRepository.findById(userId)
                 .map(Customer::getConnections)
-                .orElseThrow(() -> new NotFoundException("Username not found -> " + username));
+                .orElseThrow(() -> new NotFoundException("Id not found -> " + userId));
 
     }
 
 
-    // NOTE: Ecrire le test passant                         - OK
+
+    // FIXME: Ecrire le test passant                        - NoOk - LazyInitializationException
     // NOTE: Ecrire le test non passant - NotFoundException - OK
-    public List<Transaction> getTransactionsByUsername(String username) {
+    public List<Transaction> getTransactionsById(Long userId) {
 
-//        log.debug("\n");
-//        Optional<Customer> customerConnected = customerRepository.findByUsername(username);
-//        if (customerConnected.isPresent()) {
-//            List<Transaction> sentTransactions = customerConnected.get().getSentTransactions();
-//            log.debug("Nombre de transactions envoyées de l'utilisateur connecté : {}", sentTransactions.stream().count());
-//            if (sentTransactions.stream().count() > 0) {
-//                int i = 0;
-//                for (Transaction transaction : sentTransactions) {
-//                    i++;
-//                    log.debug("{} : Transaction envoyée à {}, pour un montant de {}", i, transaction.getReceiver().getUsername(), transaction.getAmount());
-//                }
-//                log.debug("\n");
-//            }
-//        }
-
-        return customerRepository.findByUsername(username)
+        return customerRepository.findById(userId)
                 .map(Customer::getSentTransactions)
-                .orElseThrow(() -> new NotFoundException("Username not found -> " + username));
+                .orElseThrow(() -> new NotFoundException("Id not found -> " + userId));
 
     }
 
@@ -96,6 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     // NOTE: Ecrire le test passant                         - OK
     // NOTE: Ecrire le test non passant : NotFoundException - OK
+    // TODO: A remplacer par l'id - Encore utilisé dans le ProfilController
     public String getEmailByUsername(String username) {
 
         return customerRepository.findByUsername(username)
@@ -105,7 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 
 
-    // FIXME: Ecrire le test passant                                             - NoOk - LazyInitializationException
+    // FIXME: Ecrire le test passant                                            - NoOk - LazyInitializationException
     // NOTE: Ecrire le test non passant : NotFoundException - Id not found      - OK
     // NOTE: Ecrire le test non passant : NotFoundException - Email not found   - OK
     // NOTE: Ecrire le test non passant : ConflictException - yourself          - OK

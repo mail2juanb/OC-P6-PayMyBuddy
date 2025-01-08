@@ -35,46 +35,14 @@ class CustomerServiceImplTest {
 
 
 
-    @Test
-    void getConnectionsByUsername_shouldThrowNotFoundException_whenUsernameNotFound() {
-
-        // Given unknown username
-        final String username = "unknownUsername";
-
-        // When try to get connections // Then NotFoundException is thrown
-        assertThatThrownBy(() -> customerService.getConnectionsByUsername(username))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("not found");
-
-    }
 
 
 
-    @Test
-    void getTransactionsByUsername_shouldThrowNotFoundException_whenUsernameNotFound() {
-
-        // Given an unknown username
-        final String username = "unknownUsername";
-
-        // When try to get connections // Then NotFoundException is thrown
-        assertThatThrownBy(() -> customerService.getTransactionsByUsername(username))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("not found");
-
-    }
 
 
-    @Test
-    void getEmailByUsername_shouldThrowNotFoundException_whenUsernameNotFound() {
 
-        // Given an unknown username
-        final String username = "unknownUsername";
 
-        // When try to get connections // Then NotFoundException is thrown
-        assertThatThrownBy(() -> customerService.getTransactionsByUsername(username))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("not found");
-    }
+
 
 
 

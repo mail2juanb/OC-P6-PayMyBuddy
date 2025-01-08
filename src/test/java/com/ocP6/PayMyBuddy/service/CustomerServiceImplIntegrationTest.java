@@ -83,15 +83,16 @@ class CustomerServiceImplIntegrationTest {
     //FIXME: Supprimer le @Transactional
     @Test
     @Transactional
-    void getConnectionsByUsername_shouldReturnCustomerConnectionList() {
+    void getConnectionsById_shouldReturnCustomerConnectionList() {
 
         // Given a known username
+        final Long customerId = 1L;
         final String username = "user";
 
         // When try to get connections // Then return a list of customer with this username
-        assertThat(customerRepository.findByUsername(username))
-                .isPresent()
-                .get()
+        Customer customer = customerRepository.findById(customerId)
+                        .orElseThrow();
+        assertThat(customer)
                 .satisfies(user -> {
                     assertThat(user.getUsername()).isEqualTo(username);
                     assertThat(user.getConnections()).isNotNull();
@@ -102,23 +103,56 @@ class CustomerServiceImplIntegrationTest {
 
 
 
-    //FIXME: Suuprimer le @Transactional
+    @Test
+    void getConnectionsById_shouldThrowNotFoundException_whenIdNotFound() {
+
+        // Given unknown Id
+        final Long customerId = 22L;
+
+        // When try to get connections // Then NotFoundException is thrown
+        assertThatThrownBy(() -> customerService.getConnectionsById(customerId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("not found");
+
+    }
+
+
+
+    // FIXME: LazyInitializationException without @Transactional
     @Test
     @Transactional
-    void getTransactionsByUsername_shouldReturnTransactionList() {
+    void getTransactionsById_shouldReturnTransactionList() {
 
-        // Given a known username
+        // Given a known customer
+        final Long customerId = 1L;
         final String username = "user";
 
-        // When try to get transactions // Then return a list of transaction with this username
-        assertThat(customerRepository.findByUsername(username))
-                .isPresent()
-                .get()
+        // When try to get transactions // Then return a list of transaction with this Id
+        Customer customer = customerRepository.findById(customerId)
+                        .orElseThrow();
+        assertThat(customer)
                 .satisfies(user -> {
                     assertThat(user.getUsername()).isEqualTo(username);
                     assertThat(user.getSentTransactions()).isNotNull();
                     assertThat(user.getSentTransactions().size()).isEqualTo(2);
                 } );
+    }
+
+
+
+
+    @Test
+    void getTransactionsById_shouldThrowNotFoundException_whenUsernameNotFound() {
+
+        // Given an unknown customer
+        final Long customerId = 22L;
+        final String username = "unknownUsername";
+
+        // When try to get connections // Then NotFoundException is thrown
+        assertThatThrownBy(() -> customerService.getTransactionsById(customerId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("not found");
+
     }
 
 
@@ -138,6 +172,20 @@ class CustomerServiceImplIntegrationTest {
                     assertThat(user.getUsername()).isEqualTo(username);
                     assertThat(user.getEmail()).isEqualTo(email);
                 } );
+    }
+
+
+
+    @Test
+    void getEmailByUsername_shouldThrowNotFoundException_whenUsernameNotFound() {
+
+        // Given an unknown username
+        final String username = "unknownUsername";
+
+        // When try to get connections // Then NotFoundException is thrown
+        assertThatThrownBy(() -> customerService.getEmailByUsername(username))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("not found");
     }
 
 
