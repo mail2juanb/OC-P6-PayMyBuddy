@@ -13,14 +13,9 @@
             <a th:href="@{transfert}" class="active">Transférer</a>
             <a th:href="@{profil}">Profil</a>
             <a th:href="@{connection}">Ajouter relation</a>
-
-<!--            TODO: Remplacer le bouton, graphiquement c'est pas top-->
-<!--            TODO: Mieux mais erreur lors du relog-->
             <form th:action="@{/logout}" method="post" style="display: inline;">
                 <a href="javascript:void(0)" onclick="this.closest('form').submit()" >Se déconnecter</a>
-<!--                <button type="submit" >Se déconnecter</button>-->
             </form>
-
         </nav>
     </header>
     <main class="container">
@@ -28,36 +23,53 @@
         <div th:if="${param.connection}" class="connection-message">
             Votre liste de relation a été mise à jour.
         </div>
+        <!-- Message ajout de transaction -->
+        <div th:if="${param.transaction}" class="connection-message">
+            La transaction a bien été effectuée.
+        </div>
         <section class="form-section">
-            <select name="relation" required>
-                <option value="" disabled selected>Sélectionner une relation</option>
-                <option th:each="connection : ${connections}"
-                        th:value="${connection.id}"
-                        th:text="${connection.username}">
-                </option>
-            </select>
-            <input type="text" name="description" placeholder="Description" required>
-            <input type="number" name="amount" placeholder="0" min="0" step="0.01" required>
-            <button type="submit">Payer</button>
+            <form th:action="@{/transfert}" method="post">
+                <select name="relation" required>
+                    <option value="" disabled selected>Sélectionner une relation</option>
+                    <option th:each="connection : ${connections}"
+                            th:value="${connection.id}"
+                            th:text="${connection.username}">
+                    </option>
+                </select>
+                <input type="text" name="description" placeholder="Description" required>
+                <input type="number" name="amount" placeholder="0" min="0" step="0.01" required>
+                <button type="submit">Payer</button>
+            </form>
         </section>
         <section>
             <h2>Mes Transactions</h2>
-            <table class="transactions-table">
-                <thead>
+            <div th:if="${transactions.isEmpty()}">
+                <p>Aucune transaction n'a été effectuée pour le moment.</p>
+            </div>
+            <div th:unless="${transactions.isEmpty()}">
+                <table class="transactions-table">
+                    <thead>
                     <tr>
                         <th>Relations</th>
                         <th>Description</th>
                         <th>Montant</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <tr th:each="transaction : ${transactions}">
                         <td th:text="${transaction.receiver.username}"></td>
                         <td th:text="${transaction.description}"></td>
                         <td th:text="${transaction.amount + ' €'}"></td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section>
+            <h2>Mon Solde</h2>
+            <div th:text="${balance + ' €'}">
+                <!-- Solde formaté en euros -->
+            </div>
         </section>
     </main>
 </body>

@@ -33,8 +33,17 @@ public class Transaction {
     private String description;
 
 
-    @Column(nullable = false, precision = 65, scale = 2)
+    @Column(nullable = false)
     @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
     private BigDecimal amount;
+
+
+    // Constructeur pour l'ajout d'une nouvelle Transaction dans la BDD
+    public Transaction(Customer sender, Customer receiver, String description, BigDecimal amount) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.description = description;
+        this.amount = amount;
+    }
 
 }

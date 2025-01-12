@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -24,20 +26,19 @@ public class CustomerServiceImpl implements CustomerService {
 
     // NOTE: Ecrire le test passant                         - OK
     // NOTE: Ecrire le test non passant : ConflictException - OK
-    public void createCustomer(String username, String email, String password){
+    public void createCustomer(String username, String email, String password) {
 
         // NOTE: Si l'email existe déjà dans la bdd alors on lève une ConflictException
-        if(customerRepository.findByEmailIgnoreCase(email).isPresent()) {
+        if (customerRepository.findByEmailIgnoreCase(email).isPresent()) {
             throw new ConflictException("Email already exist -> " + email);
         }
 
         String hashedPassword = passwordEncoder.encode(password);
 
-        final Customer customer =  new Customer(username, email, hashedPassword);
+        final Customer customer = new Customer(username, email, hashedPassword);
 
         customerRepository.save(customer);
     }
-
 
 
     // FIXME: Ecrire le test passant                        - NoOk - LazyInitializationException
@@ -51,7 +52,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
-
     // FIXME: Ecrire le test passant                        - NoOk - LazyInitializationException
     // NOTE: Ecrire le test non passant - NotFoundException - OK
     public List<Transaction> getTransactionsById(Long userId) {
@@ -63,7 +63,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
-
     // NOTE: Ecrire le test passant                         - OK
     // NOTE: Ecrire le test non passant : NotFoundException - OK
     // TODO: A remplacer par l'id - Encore utilisé dans le ProfilController
@@ -73,7 +72,6 @@ public class CustomerServiceImpl implements CustomerService {
                 .map(Customer::getEmail)
                 .orElseThrow(() -> new NotFoundException("Username not found -> " + username));
     }
-
 
 
     // FIXME: Ecrire le test passant                                            - NoOk - LazyInitializationException
@@ -103,7 +101,7 @@ public class CustomerServiceImpl implements CustomerService {
         // NOTE: Vérifier que les 2 Customer ne sont pas déjà amis
         List<Customer> connections = customer.getConnections();
 
-        if(connections.stream().anyMatch(c -> c.getId().equals(addCustomerId))) {
+        if (connections.stream().anyMatch(c -> c.getId().equals(addCustomerId))) {
             throw new ConflictException("You are already connected with -> " + email);
         }
 
@@ -112,6 +110,16 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(customer);
         addCustomer.getConnections().add(customer);
         customerRepository.save(addCustomer);
+
+    }
+
+
+
+    public BigDecimal getBalanceById(Long userId) {
+
+        Customer customer = customerRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("ID not found -> " + userId));
+        return customer.getBalance();
 
     }
 
