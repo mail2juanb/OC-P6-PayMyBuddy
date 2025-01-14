@@ -33,15 +33,12 @@ public class TransfertController {
         Long userId = SecurityTools.getConnectedUser().getId();
 
         // NOTE: Demande au service de récupérer la liste des amis du customer connecté
-        // TODO: Déplacer vers TransfertService
         List<Customer> connections = customerService.getConnectionsById(userId);
 
         // NOTE: Demande au service d'envoyer la liste des amis de l'utilisateur concerné
-        // TODO: Déplacer vers TransfertService
-        List<Transaction> transactions = customerService.getTransactionsById(userId);
+        List<Transaction> transactions = transfertService.getTransactionsById(userId);
 
         // NOTE Demande au service de renvoyer la balance du customer connecté
-        // TODO: Déplacer vers TransfertService
         BigDecimal balance = customerService.getBalanceById(userId);
 
         // NOTE: Envoi des listes à la vue concernée

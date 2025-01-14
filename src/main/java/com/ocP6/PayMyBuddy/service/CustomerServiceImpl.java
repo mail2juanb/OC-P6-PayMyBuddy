@@ -3,7 +3,6 @@ package com.ocP6.PayMyBuddy.service;
 import com.ocP6.PayMyBuddy.exception.ConflictException;
 import com.ocP6.PayMyBuddy.exception.NotFoundException;
 import com.ocP6.PayMyBuddy.model.Customer;
-import com.ocP6.PayMyBuddy.model.Transaction;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -47,17 +46,6 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customerRepository.findById(userId)
                 .map(Customer::getConnections)
-                .orElseThrow(() -> new NotFoundException("Id not found -> " + userId));
-
-    }
-
-
-    // FIXME: Ecrire le test passant                        - NoOk - LazyInitializationException
-    // NOTE: Ecrire le test non passant - NotFoundException - OK
-    public List<Transaction> getTransactionsById(Long userId) {
-
-        return customerRepository.findById(userId)
-                .map(Customer::getSentTransactions)
                 .orElseThrow(() -> new NotFoundException("Id not found -> " + userId));
 
     }

@@ -22,6 +22,19 @@ public class TransfertServiceImpl implements TransfertService {
     private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;
 
+
+    // FIXME: Ecrire le test passant                        - NoOk - LazyInitializationException
+    // NOTE: Ecrire le test non passant - NotFoundException - OK
+    public List<Transaction> getTransactionsById(Long userId) {
+
+        return customerRepository.findById(userId)
+                .map(Customer::getSentTransactions)
+                .orElseThrow(() -> new NotFoundException("Id not found -> " + userId));
+
+    }
+
+
+
     public void createTransfert(Long customerId, Long relationId, String description, BigDecimal amount) {
 
         //TODO: Vérifier que le userId et que le relationId existent.
