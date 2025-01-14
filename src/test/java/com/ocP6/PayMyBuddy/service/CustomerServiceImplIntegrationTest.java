@@ -22,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @Slf4j
+@Transactional
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 class CustomerServiceImplIntegrationTest {
@@ -120,7 +121,6 @@ class CustomerServiceImplIntegrationTest {
 
     // FIXME: LazyInitializationException without @Transactional
     @Test
-    @Transactional
     void getTransactionsById_shouldReturnTransactionList() {
 
         // Given a known customer

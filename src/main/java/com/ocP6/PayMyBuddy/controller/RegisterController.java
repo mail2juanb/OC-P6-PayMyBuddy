@@ -29,7 +29,7 @@ public class RegisterController {
                                    @RequestParam String email,
                                    @RequestParam String password) {
 
-
+        //TODO: Remplacer par un objet avec des droits - cf projet Safe
         // NOTE: Demande au Service d'enregistrer un nouveau compte
         try {
             customerService.createCustomer(username, email, password);

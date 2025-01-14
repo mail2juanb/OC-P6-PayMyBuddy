@@ -58,6 +58,7 @@ public class TransfertController {
                     @RequestParam("relation") Long relationId,
                     @RequestParam("description") String description,
                     @RequestParam("amount") BigDecimal amount) {
+        //TODO: Remplacer par un objet avec des droits - cf projet Safe
 
         // NOTE: Récupère l'id de l'utilisateur connecté
         Long userId = SecurityTools.getConnectedUser().getId();

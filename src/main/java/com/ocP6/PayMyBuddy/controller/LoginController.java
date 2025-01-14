@@ -26,6 +26,8 @@ public class LoginController {
     @PostMapping("/login")
     public String loginRequest(@RequestParam String email,
                                @RequestParam String password) {
+        //TODO: Remplacer par un objet avec des droits - cf projet Safe
+
         return "redirect:/login?success";
     }
 }
