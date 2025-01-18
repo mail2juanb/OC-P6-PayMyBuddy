@@ -19,18 +19,47 @@
         </nav>
     </header>
     <main class="container">
+
         <!-- Message ajout de connection -->
         <div th:if="${param.connection}" class="connection-message">
             Votre liste de relation a été mise à jour.
         </div>
+
         <!-- Message ajout de transaction -->
-        <div th:if="${param.transaction}" class="connection-message">
+        <div th:if="${param.transaction}" class="transaction-message">
             La transaction a bien été effectuée.
         </div>
+
+        <!-- Message d'erreur - transaction - Customer not found -->
+        <div th:if="${param.errorCustomerNotFound}" class="transaction-error-message">
+            Vous n'êtes pas reconnu par le système.
+        </div>
+
+        <!-- Message d'erreur - transaction - Relation not found -->
+        <div th:if="${param.errorRelationNotFound}" class="transaction-error-message">
+            Votre ami n'est pas enregistré dans le système.
+        </div>
+
+        <!-- Message d'erreur - transaction - Can be friend with yourself -->
+        <div th:if="${param.errorConflictYourself}" class="transaction-error-message">
+            Vous ne pouvez être ami avec vous même.
+        </div>
+
+        <!-- Message d'erreur - transaction - You are not connected with your friend -->
+        <div th:if="${param.errorConflictConnection}" class="transaction-error-message">
+            Vous n'êtes pas ami avec la personne demandée.
+        </div>
+
+        <!-- Message d'erreur - transaction - The amount to be transferred exceeds your available balance -->
+        <div th:if="${param.errorConflictExceeds}" class="transaction-error-message">
+            Le montant à transférer dépasse votre solde disponible.
+        </div>
+
+
         <section class="form-section">
-            <form th:action="@{/transfert}" method="post">
-                <select name="relation" required>
-                    <option value="" disabled selected>Sélectionner une relation</option>
+            <form th:action="@{/transfert}" th:object="${transfertRequest}" method="post">
+                <select th:field="*{relationId}" required >
+                    <option value="-1" disabled th:selected="${relationId == null}">Sélectionner une relation</option>
                     <option th:each="connection : ${connections}"
                             th:value="${connection.id}"
                             th:text="${connection.username}">
@@ -43,10 +72,10 @@
         </section>
         <section>
             <h2>Mes Transactions</h2>
-            <div th:if="${transactions.isEmpty()}">
+            <div th:if="${transactions != null and transactions.isEmpty()}">
                 <p>Aucune transaction n'a été effectuée pour le moment.</p>
             </div>
-            <div th:unless="${transactions.isEmpty()}">
+            <div th:unless="${transactions != null and transactions.isEmpty()}">
                 <table class="transactions-table">
                     <thead>
                     <tr>

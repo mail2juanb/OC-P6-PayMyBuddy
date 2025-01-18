@@ -87,4 +87,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return  ResponseEntity.status(statusCode).body(response);
     }
 
+
+
+    @ExceptionHandler(UnhandledException.class)
+    public ResponseEntity<Object> handleUnhandledException(UnhandledException exception, WebRequest request) {
+        log.error("UnhandledException: {}", exception.getMessage());
+        return createErrorResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
 }
