@@ -17,7 +17,7 @@ import java.util.Objects;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class TransfertServiceImpl implements TransfertService {
+public class TransactionServiceImpl implements TransactionService {
 
     private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;

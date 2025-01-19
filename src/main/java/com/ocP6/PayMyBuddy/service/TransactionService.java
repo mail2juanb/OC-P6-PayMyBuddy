@@ -5,7 +5,7 @@ import com.ocP6.PayMyBuddy.model.Transaction;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface TransfertService {
+public interface TransactionService {
 
 
     List<Transaction> getTransactionsById(Long userId);

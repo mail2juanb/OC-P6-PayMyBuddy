@@ -8,7 +8,7 @@ import com.ocP6.PayMyBuddy.exception.UnhandledException;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.model.Transaction;
 import com.ocP6.PayMyBuddy.service.CustomerService;
-import com.ocP6.PayMyBuddy.service.TransfertService;
+import com.ocP6.PayMyBuddy.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class TransfertController {
 
     private final CustomerService customerService;
 
-    private final TransfertService transfertService;
+    private final TransactionService transactionService;
 
 
     @GetMapping("/transfert")
@@ -39,7 +39,7 @@ public class TransfertController {
         List<Customer> connections = customerService.getConnectionsById(userId);
 
         // NOTE : Demande au service d'envoyer la liste des amis de l'utilisateur concerné
-        List<Transaction> transactions = transfertService.getTransactionsById(userId);
+        List<Transaction> transactions = transactionService.getTransactionsById(userId);
 
         // NOTE : Demande au service de renvoyer la balance du customer connecté
         BigDecimal balance = customerService.getBalanceById(userId);
@@ -72,7 +72,7 @@ public class TransfertController {
 
         // NOTE : Demande au service d'ajouter une transaction
         try {
-            transfertService.createTransfert(userId, relationId, description, amount);
+            transactionService.createTransfert(userId, relationId, description, amount);
             return "redirect:/transfert?transaction=true";                          // Redirection vers la page de transfert en cas de succès
         } catch (NotFoundException exception) {
             log.error("NotFoundException during createTransfert: {}", exception.getMessage());
