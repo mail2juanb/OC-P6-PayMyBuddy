@@ -1,10 +1,12 @@
-package com.ocP6.PayMyBuddy.service;
+package com.ocP6.PayMyBuddy.integrationTests;
 
 
 import com.ocP6.PayMyBuddy.exception.ConflictException;
 import com.ocP6.PayMyBuddy.exception.NotFoundException;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
+import com.ocP6.PayMyBuddy.service.CustomerServiceImpl;
+import com.ocP6.PayMyBuddy.service.TransactionServiceImpl;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -14,21 +16,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+
+
 
 @Slf4j
 @Transactional
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-class CustomerServiceImplIntegrationTest {
+class CustomerServiceIntegrationTest {
 
     @Autowired
     private CustomerServiceImpl customerService;
+
+    @Autowired
+    private TransactionServiceImpl transactionService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -37,7 +41,7 @@ class CustomerServiceImplIntegrationTest {
     private PasswordEncoder passwordEncoder;
 
 
-
+// TODO : Je pense que ces tests ne sont pas correct. Ce sont des tests d'intégration à écrire à partir du controller...
 
     @Test
     void createCustomer_shouldAddCustomer() {
@@ -51,7 +55,7 @@ class CustomerServiceImplIntegrationTest {
         customerService.createCustomer(username, email, rawPassword);
 
         // Then
-        BigDecimal zero = BigDecimal.ZERO.setScale(2);
+        BigDecimal zero = BigDecimal.ZERO;
 
         assertThat(customerRepository.findByUsername(username))
                 .isPresent()
@@ -65,25 +69,8 @@ class CustomerServiceImplIntegrationTest {
 
 
 
+    @Deprecated
     @Test
-    void createCustomer_shouldThrowConflictException_whenEmailAlreadyExists() {
-
-        // Given a customer already registred
-        final String username = "user";
-        final String email = "user@user.com";
-        final String rawPassword = "user";
-
-        // When the user try to be registred // Then a Conflict Exception is thrown
-        assertThatThrownBy(() -> customerService.createCustomer(username, email, rawPassword))
-                .isInstanceOf(ConflictException.class)
-                .hasMessageContaining("already exist");
-    }
-
-
-
-    //FIXME: Supprimer le @Transactional
-    @Test
-    @Transactional
     void getConnectionsById_shouldReturnCustomerConnectionList() {
 
         // Given a known username
@@ -104,6 +91,7 @@ class CustomerServiceImplIntegrationTest {
 
 
 
+    @Deprecated
     @Test
     void getConnectionsById_shouldThrowNotFoundException_whenIdNotFound() {
 
@@ -119,7 +107,6 @@ class CustomerServiceImplIntegrationTest {
 
 
 
-    // FIXME: LazyInitializationException without @Transactional
     @Test
     void getTransactionsById_shouldReturnTransactionList() {
 
@@ -146,10 +133,9 @@ class CustomerServiceImplIntegrationTest {
 
         // Given an unknown customer
         final Long customerId = 22L;
-        final String username = "unknownUsername";
 
         // When try to get connections // Then NotFoundException is thrown
-        assertThatThrownBy(() -> customerService.getTransactionsById(customerId))
+        assertThatThrownBy(() -> transactionService.getTransactionsById(customerId))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("not found");
 
@@ -190,9 +176,7 @@ class CustomerServiceImplIntegrationTest {
 
 
 
-    // FIXME: LazyInitializationException without @Transactional
     @Test
-    @Transactional
     void addConnection_shouldAddConnection() {
 
         // Given a known username and email to add

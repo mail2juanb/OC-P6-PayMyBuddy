@@ -23,8 +23,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final PasswordEncoder passwordEncoder;
 
-    // NOTE: Ecrire le test passant                         - OK
-    // NOTE: Ecrire le test non passant : ConflictException - OK
+
+
+
     public void createCustomer(String username, String email, String password) {
 
         // NOTE: Si l'email existe déjà dans la bdd alors on lève une ConflictException
@@ -40,8 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
-    // FIXME: Ecrire le test passant                        - NoOk - LazyInitializationException
-    // NOTE: Ecrire le test non passant - NotFoundException - OK
+
     public List<Customer> getConnectionsById(Long userId) {
 
         return customerRepository.findById(userId)
@@ -62,12 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
-    // FIXME: Ecrire le test passant                                            - NoOk - LazyInitializationException
-    // NOTE: Ecrire le test non passant : NotFoundException - Id not found      - OK
-    // NOTE: Ecrire le test non passant : NotFoundException - Email not found   - OK
-    // NOTE: Ecrire le test non passant : ConflictException - yourself          - OK
-    // NOTE: Ecrire le test non passant : ConflictException - already           - OK
-    @Transactional
+
     public void addConnection(Long customerId, String email) {
 
         // NOTE: Récupère le customer correspondant à l'id.

@@ -1,6 +1,7 @@
-package com.ocP6.PayMyBuddy.repository;
+package com.ocP6.PayMyBuddy.unitTests;
 
 import com.ocP6.PayMyBuddy.model.Customer;
+import com.ocP6.PayMyBuddy.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -10,8 +11,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-
+// TODO : Ca devrait pas être des tests avec Mockito et non intégration SpringBoot ?
 @SpringBootTest
 class CustomerRepositoryTest {
 
@@ -43,6 +47,7 @@ class CustomerRepositoryTest {
     }
 
 
+    
     @Test
     void findByEmailIgnoreCase_shouldReturnEmpty() {
 
@@ -57,6 +62,30 @@ class CustomerRepositoryTest {
 
     }
 
+
+
+    // TODO : Est ce utile d'écrire le test non passant : findById_shouldReturnEmpty
+    @Test
+    void findById_shouldReturnCustomer () {
+
+        // Given an Id
+        final Customer customer = new Customer();
+        customer.setId(1L);
+        customer.setUsername("user");
+
+        // When try to find customer by id
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.of(customer));
+        Optional<Customer> result = customerRepository.findById(customer.getId());
+
+        // Then return Customer
+        assertTrue(result.isPresent());
+        assertEquals("user", result.get().getUsername());
+        verify(customerRepository).findById(customer.getId());
+    }
+
+
+
+    // TODO : A supprimer lorsque la méthode ne sera plus utilisée (ProfilController)
     @Test
     void findByUsername_shouldReturnCustomer(){
 
@@ -73,6 +102,7 @@ class CustomerRepositoryTest {
     }
 
 
+    // TODO : A supprimer lorsque la méthode ne sera plus utilisée (ProfilController)
     @Test
     void findByUsername_shouldReturnEmpty() {
 
@@ -86,4 +116,5 @@ class CustomerRepositoryTest {
         assertFalse(result.isPresent());
 
     }
+
 }
