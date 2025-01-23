@@ -59,7 +59,7 @@
         <section class="form-section">
             <form th:action="@{/transfert}" th:object="${transfertRequest}" method="post">
                 <select th:field="*{relationId}" required >
-                    <option value="-1" disabled th:selected="${relationId == null}">Sélectionner une relation</option>
+                    <option value="" th:selected="true" th:disabled="true" th:hidden = "true">Sélectionner une relation</option>
                     <option th:each="connection : ${connections}"
                             th:value="${connection.id}"
                             th:text="${connection.username}">

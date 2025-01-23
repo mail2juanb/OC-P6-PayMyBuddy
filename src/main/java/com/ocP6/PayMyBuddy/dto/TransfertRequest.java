@@ -23,6 +23,6 @@ public class TransfertRequest {
 
     @NotNull(message = "Le montant ne peut pas être null")
     @Positive(message = "Le montant doit être positif")
-    private BigDecimal amount;
+    private BigDecimal amount = BigDecimal.ZERO;
 
 }
