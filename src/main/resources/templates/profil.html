@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de Profil - Pay My Buddy</title>
     <link rel="stylesheet" href="/css/profil.css">
 </head>
+
 <body>
+
 <header>
+
     <h1>Pay My Buddy</h1>
+
     <nav>
         <a th:href="@{transfert}">Transférer</a>
         <a th:href="@{profil}" class="active">Profil</a>
         <a th:href="@{connection}">Ajouter relation</a>
         <a href="#">Se déconnecter</a>
     </nav>
+
 </header>
+
 <main>
+
     <h2>Profil</h2>
-    <form action="/updateProfile" method="post" class="profile-info">
+
+    <form th:action="@{/profil}" th:object="${profilRequest}" method="post" class="profile-info">
         <div>
             <label for="username">Username :</label>
             <input type="text" id="username" name="username" th:value="${username}" class="value" required>
@@ -33,6 +42,24 @@
         </div>
         <button type="submit">Modifier</button>
     </form>
+
+    <!-- Message d'erreur - profil - Customer not found -->
+    <div th:if="${param.errorCustomerNotFound}" class="profil-error-message">
+        Vous n'êtes pas reconnu par le système.
+    </div>
+
+    <!-- Message d'erreur - profil - Username is already taken -->
+    <div th:if="${param.errorUsernameTaken}" class="profil-error-message">
+        Ce username est déjà utilisé. Merci d'en choisir un autre.
+    </div>
+
+    <!-- Message d'erreur - profil - Email is already taken -->
+    <div th:if="${param.errorEmailTaken}" class="profil-error-message">
+        Cet email est déjà utilisé. Merci d'en utiliser un autre.
+    </div>
+
 </main>
+
 </body>
+
 </html>

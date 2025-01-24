@@ -50,16 +50,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 
 
-    // TODO: A remplacer par l'id - Encore utilisé dans le ProfilController
-    public String getEmailByUsername(String username) {
-
-        return customerRepository.findByUsername(username)
-                .map(Customer::getEmail)
-                .orElseThrow(() -> new NotFoundException("Username not found -> " + username));
-    }
-
-
-
     public void addConnection(Long customerId, String email) {
 
         // NOTE: Récupère le customer correspondant à l'id.
@@ -99,6 +89,59 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("ID not found -> " + userId));
         return customer.getBalance();
+
+    }
+
+
+
+    public String getUsernameById(Long userId) {
+
+        Customer customer = customerRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + userId));
+        return customer.getUsername();
+
+    }
+
+
+
+    public String getEmailById(Long userId) {
+
+        Customer customer = customerRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + userId));
+        return customer.getEmail();
+
+    }
+
+
+
+    public void updateCustomer(Long userId, String usernameRequest, String emailRequest, String passwordRequest) {
+
+        // NOTE : Récupérer le Customer original
+        Customer customer = customerRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + userId));
+
+        // NOTE : Vérifier que le username de la request n'est pas déjà utilisé par un autre customer
+        customerRepository.findByUsername(usernameRequest).ifPresent(foundCustomer -> {
+            if (!foundCustomer.getId().equals(userId)) {
+                throw new AlreadyTakenUsernameException("Username is already taken.");
+            }
+        });
+
+        // NOTE : Vérifier que l'email de la request n'est pas utilisé par un autre customer
+        customerRepository.findByEmailIgnoreCase(emailRequest).ifPresent(existingCustomer -> {
+            if (!existingCustomer.getId().equals(userId)) {
+                throw new AlreadyTakenEmailException("Email is already taken.");
+            }
+        });
+
+        // NOTE : Mettre à jour les informations
+        customer.setUsername(usernameRequest);
+        customer.setEmail(emailRequest);
+        customer.setPassword(passwordEncoder.encode(passwordRequest));
+
+        // NOTE : Sauvegarder les modifications
+        customerRepository.save(customer);
+
 
     }
 

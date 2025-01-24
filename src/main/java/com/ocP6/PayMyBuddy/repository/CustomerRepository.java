@@ -9,7 +9,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Optional<Customer> findByEmailIgnoreCase(String email);
 
-    // TODO: A supprimer lorsque la méthode ne sera plus utilisé - CustomerServiceImpl
     Optional<Customer> findByUsername(String username);
 
 }

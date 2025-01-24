@@ -220,5 +220,6 @@ class CustomerRepositoryTest {
 
     }
 
+    // TODO : Ecrire les tests unitaires pour customerRepository.findByUsername
 
 }

@@ -21,13 +21,18 @@
     <main class="container">
 
         <!-- Message ajout de connection -->
-        <div th:if="${param.connection}" class="connection-message">
+        <div th:if="${param.connection}" class="success-message">
             Votre liste de relation a été mise à jour.
         </div>
 
         <!-- Message ajout de transaction -->
-        <div th:if="${param.transaction}" class="transaction-message">
+        <div th:if="${param.transaction}" class="success-message">
             La transaction a bien été effectuée.
+        </div>
+
+        <!-- Message de mise à jour du profil -->
+        <div th:if="${param.profil}" class="success-message">
+            Le profil a bien été mis à jour.
         </div>
 
         <!-- Message d'erreur - transaction - Customer not found -->

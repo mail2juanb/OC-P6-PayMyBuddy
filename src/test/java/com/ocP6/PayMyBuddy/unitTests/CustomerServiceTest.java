@@ -303,4 +303,12 @@ class CustomerServiceTest {
 
 
 
+    // TODO : Ecrire les tests unitaires pour customerService.getUsernameById
+    // TODO : Ecrire les tests unitaires pour customerService.getEmailById
+    // TODO : Ecrire les tests unitaires pour customerService.updateCustomer
+
+
+
+
+
 }

@@ -12,10 +12,14 @@ public interface CustomerService {
 
     List<Customer> getConnectionsById(Long userId);
 
-    String getEmailByUsername(String username);
-
     void addConnection(Long userId, String email);
 
     BigDecimal getBalanceById(Long userId);
+
+    String getUsernameById(Long userId);
+
+    String getEmailById(Long userId);
+
+    void updateCustomer(Long userId, String username, String email, String password);
 
 }
