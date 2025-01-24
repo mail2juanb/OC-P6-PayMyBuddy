@@ -1,7 +1,6 @@
 package com.ocP6.PayMyBuddy.unitTests;
 
-import com.ocP6.PayMyBuddy.exception.ConflictException;
-import com.ocP6.PayMyBuddy.exception.NotFoundException;
+import com.ocP6.PayMyBuddy.exception.*;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
 import com.ocP6.PayMyBuddy.service.CustomerServiceImpl;
@@ -12,15 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -188,7 +183,7 @@ class CustomerServiceTest {
 
 
     @Test
-    void addConnection_shouldThrowNotFoundException_whenCustomerNotFound () {
+    void addConnection_shouldThrowNotFoundCustomerException_whenCustomerNotFound () {
 
         // Given
         final Long customerId = 1L;
@@ -196,15 +191,15 @@ class CustomerServiceTest {
 
         when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
 
-        // When try to add connection // Then throw NotFoundException
-        assertThrows(NotFoundException.class, () -> customerService.addConnection(customerId, email));
+        // When try to add connection // Then throw NotFoundCustomerException
+        assertThrows(NotFoundCustomerException.class, () -> customerService.addConnection(customerId, email));
 
     }
 
 
 
     @Test
-    void addConnection_shouldThrowNotFoundException_whenEmailNotFound () {
+    void addConnection_shouldThrowNotFoundCustomerException_whenEmailNotFound () {
 
         // Given
         final Long customerId = 1L;
@@ -216,14 +211,14 @@ class CustomerServiceTest {
         when(customerRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.empty());
 
         // When try to addConnection // Then throw NotFoundException
-        assertThrows(NotFoundException.class, () -> customerService.addConnection(customerId, email));
+        assertThrows(NotFoundCustomerException.class, () -> customerService.addConnection(customerId, email));
 
     }
 
 
 
     @Test
-    void addConnection_shouldThrowConflictException_whenConnectingToSelf () {
+    void addConnection_shouldThrowConflictYourselfException_whenConnectingToSelf () {
 
         // Given
         final Customer customer = new Customer();
@@ -234,14 +229,14 @@ class CustomerServiceTest {
         when(customerRepository.findByEmailIgnoreCase(customer.getEmail())).thenReturn(Optional.of(customer));
 
         // When try to add connection // Then throw ConflictException
-        assertThrows(ConflictException.class, () -> customerService.addConnection(customer.getId(), customer.getEmail()));
+        assertThrows(ConflictYourselfException.class, () -> customerService.addConnection(customer.getId(), customer.getEmail()));
 
     }
 
 
 
     @Test
-    void addConnection_shouldThrowConflictException_whenAlreadyConnected () {
+    void addConnection_shouldThrowConflictConnectionException_whenAlreadyConnected () {
 
         // Given
         final Customer customer = new Customer();
@@ -260,7 +255,7 @@ class CustomerServiceTest {
         when(customerRepository.findByEmailIgnoreCase(friend.getEmail())).thenReturn(Optional.of(friend));
 
         // When try to add connection // Then throw ConflictException
-        assertThrows(ConflictException.class, () -> customerService.addConnection(customer.getId(), friend.getEmail()));
+        assertThrows(ConflictConnectionException.class, () -> customerService.addConnection(customer.getId(), friend.getEmail()));
 
     }
 
@@ -287,7 +282,7 @@ class CustomerServiceTest {
     }
 
 
-
+    // TODO: Modifier la méthode pour lever des exceptions spécifiques -> NotFoundCustomerException
     @Test
     void getBalanceById_shouldThrowNotFoundException_whenCustomerDoesNotExist () {
 

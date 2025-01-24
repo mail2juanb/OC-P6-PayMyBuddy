@@ -1,10 +1,8 @@
 package com.ocP6.PayMyBuddy.service;
 
-import com.ocP6.PayMyBuddy.exception.ConflictException;
-import com.ocP6.PayMyBuddy.exception.NotFoundException;
+import com.ocP6.PayMyBuddy.exception.*;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,8 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
-    // NOTE: Ecrire le test passant                         - OK
-    // NOTE: Ecrire le test non passant : NotFoundException - OK
+
     // TODO: A remplacer par l'id - Encore utilisé dans le ProfilController
     public String getEmailByUsername(String username) {
 
@@ -67,25 +64,24 @@ public class CustomerServiceImpl implements CustomerService {
 
         // NOTE: Récupère le customer correspondant à l'id.
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundException("Id not found -> " + customerId));
+                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + customerId));
 
         // NOTE: Vérifier si l'email existe.
         Customer addCustomer = customerRepository.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new NotFoundException("Email not found -> " + email));
+                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with email -> " + email));
 
         // NOTE: Récupère l'id correspondant à l'email
         Long addCustomerId = addCustomer.getId();
 
         // NOTE: Vérifie que ce n'est pas le même customer.
         if (addCustomerId.equals(customerId)) {
-            throw new ConflictException("You can't be connected to yourself");
+            throw new ConflictYourselfException("You can't be connected to yourself");
         }
 
         // NOTE: Vérifier que les 2 Customer ne sont pas déjà amis
         List<Customer> connections = customer.getConnections();
-
         if (connections.stream().anyMatch(c -> c.getId().equals(addCustomerId))) {
-            throw new ConflictException("You are already connected with -> " + email);
+            throw new ConflictConnectionException("You are already connected with -> " + email);
         }
 
         // NOTE: Ajouter la relation entre eux

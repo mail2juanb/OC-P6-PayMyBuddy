@@ -1,7 +1,6 @@
 package com.ocP6.PayMyBuddy.service;
 
-import com.ocP6.PayMyBuddy.exception.ConflictException;
-import com.ocP6.PayMyBuddy.exception.NotFoundException;
+import com.ocP6.PayMyBuddy.exception.*;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.model.Transaction;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
@@ -23,13 +22,12 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
 
 
-    // FIXME: Ecrire le test passant                        - NoOk - LazyInitializationException
-    // NOTE: Ecrire le test non passant - NotFoundException - OK
+
     public List<Transaction> getTransactionsById(Long userId) {
 
         return customerRepository.findById(userId)
                 .map(Customer::getSentTransactions)
-                .orElseThrow(() -> new NotFoundException("Id not found -> " + userId));
+                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + userId));
 
     }
 
@@ -39,32 +37,32 @@ public class TransactionServiceImpl implements TransactionService {
 
         //NOTE: Vérifier que le userId et que le relationId existent.
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundException("customer not found -> " + customerId));
+                .orElseThrow(() -> new NotFoundCustomerException("customer not found -> " + customerId));
         Customer relation = customerRepository.findById(relationId)
-                .orElseThrow(() -> new NotFoundException("relation not found -> " + relationId));
+                .orElseThrow(() -> new NotFoundRelationException("relation not found -> " + relationId));
 
         // NOTE: Vérifie que ce n'est pas le même customer.
         if (relationId.equals(customerId)) {
-            throw new ConflictException("You can't be connected to yourself");
+            throw new ConflictYourselfException("You can't be connected to yourself");
         }
 
         //NOTE: Vérifier qu'ils sont bien amis
         List<Customer> customerConnections = customer.getConnections();
         if (customerConnections.isEmpty()) {
-            throw new ConflictException("customer connection list is empty.");
+            throw new ConflictConnectionException("customer connection list is empty.");
         }
 
         //NOTE: Il faut vérifier que relation est bien dans la liste du customer
         boolean isConnected = customerConnections.stream()
                 .anyMatch(connection -> Objects.equals(connection.getId(), relationId));
         if (!isConnected) {
-            throw new ConflictException("Your connection to this customer doesn't exists.");
+            throw new ConflictConnectionException("Your connection to this customer doesn't exists.");
         }
 
         //NOTE: Vérifier que le montant (amount) à transférer est bien inférieur à son solde (balance)
         BigDecimal balance = customer.getBalance();
         if (balance.compareTo(amount) < 0) {
-            throw new ConflictException("The amount to be transferred exceeds your available balance.");
+            throw new ConflictExceedsException("The amount to be transferred exceeds your available balance.");
         }
 
         //NOTE: Sauvegarde de la transaction

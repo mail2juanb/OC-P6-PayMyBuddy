@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter une relation - Pay My Buddy</title>
     <link rel="stylesheet" href="/css/connection.css">
 </head>
+
 <body>
     <header class="navbar">
         <h1>Pay My Buddy</h1>
@@ -16,24 +18,31 @@
             <a href="#">Se déconnecter</a>
         </nav>
     </header>
+
     <main class="container">
+
         <h2>Chercher une relation</h2>
-        <form th:action="@{/connection}" method="post" class="form-section">
+
+        <form th:action="@{/connection}" th:object="${connectionRequest}" method="post" class="form-section">
             <input type="email" name="email" placeholder="Saisir une adresse mail" required>
             <button type="submit">Ajouter</button>
         </form>
+
         <!-- Message d'erreur pour ConflictException - Already -->
         <div th:if="${param.errorconflictalready}" class="connection-error">
             L'utilisateur fait déjà partie de votre liste de relation.
         </div>
+
         <!-- Message d'erreur pour ConflictException -->
         <div th:if="${param.errorconflictyourself}" class="connection-error">
             Vous ne pouvez être ami avec vous même.
         </div>
+
         <!-- Message d'erreur pour NotFoundException -->
         <div th:if="${param.errornotfound}" class="connection-error">
             L'utilisateur est introuvable.
         </div>
+
     </main>
 </body>
 </html>
