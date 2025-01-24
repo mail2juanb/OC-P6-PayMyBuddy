@@ -26,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     public void createCustomer(String username, String email, String password) {
 
-        // NOTE: Si l'email existe déjà dans la bdd alors on lève une ConflictException
+        // NOTE : Si l'email existe déjà dans la bdd alors, on lève une Exception
         if (customerRepository.findByEmailIgnoreCase(email).isPresent()) {
             throw new ConflictException("Email already exist -> " + email);
         }

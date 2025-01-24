@@ -7,6 +7,7 @@ import com.ocP6.PayMyBuddy.service.CustomerServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -52,11 +53,13 @@ class CustomerServiceTest {
         customerService.createCustomer(username, email, password);
 
         // Then customer is created
-        verify(customerRepository).save(argThat(customer ->
-                customer.getUsername().equals(username) &&
-                customer.getEmail().equals(email) &&
-                customer.getPassword().equals(encodedPassword))
-        );
+        ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).save(customerCaptor.capture());
+
+        Customer savedCustomer = customerCaptor.getValue();
+        assertEquals(username, savedCustomer.getUsername());
+        assertEquals(email, savedCustomer.getEmail());
+        assertEquals(encodedPassword, savedCustomer.getPassword());
 
     }
 
