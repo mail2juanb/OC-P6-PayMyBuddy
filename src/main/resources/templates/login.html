@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de connexion - Pay My Buddy</title>
     <link rel="stylesheet" href="/css/login.css">
 </head>
+
 <body>
     <div class="login-container">
+
         <h1>Pay My Buddy</h1>
-        <form th:action="@{/login}" method="post">
+
+        <form th:action="@{/login}" th:object="${loginRequest}" method="post">
             <input type="email" name="email" placeholder="Mail" required>
             <input type="password" name="password" placeholder="Mot de passe" required>
             <button type="submit">Se connecter</button>
