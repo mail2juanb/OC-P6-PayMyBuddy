@@ -144,39 +144,6 @@ class CustomerServiceIntegrationTest {
 
 
     @Test
-    void getEmailByUsername_shouldReturnEmail() {
-
-        // Given a known username
-        final String username = "user";
-        final String email = "user@user.com";
-
-        // When try to get email // Then return the email string about this username
-        assertThat(customerRepository.findByUsername(username))
-                .isPresent()
-                .get()
-                .satisfies(user -> {
-                    assertThat(user.getUsername()).isEqualTo(username);
-                    assertThat(user.getEmail()).isEqualTo(email);
-                } );
-    }
-
-
-
-    @Test
-    void getEmailByUsername_shouldThrowNotFoundException_whenUsernameNotFound() {
-
-        // Given an unknown username
-        final String username = "unknownUsername";
-
-        // When try to get connections // Then NotFoundException is thrown
-        assertThatThrownBy(() -> customerService.getEmailByUsername(username))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("not found");
-    }
-
-
-
-    @Test
     void addConnection_shouldAddConnection() {
 
         // Given a known username and email to add

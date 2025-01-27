@@ -87,7 +87,7 @@ public class CustomerServiceImpl implements CustomerService {
     public BigDecimal getBalanceById(Long userId) {
 
         Customer customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("ID not found -> " + userId));
+                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + userId));
         return customer.getBalance();
 
     }
@@ -141,7 +141,6 @@ public class CustomerServiceImpl implements CustomerService {
 
         // NOTE : Sauvegarder les modifications
         customerRepository.save(customer);
-
 
     }
 

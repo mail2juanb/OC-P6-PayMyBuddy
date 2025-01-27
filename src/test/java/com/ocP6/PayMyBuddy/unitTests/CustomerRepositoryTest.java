@@ -14,6 +14,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -220,6 +222,35 @@ class CustomerRepositoryTest {
 
     }
 
-    // TODO : Ecrire les tests unitaires pour customerRepository.findByUsername
+
+
+    @Test
+    void findByUsername_shouldReturnCustomer () {
+        // Given a username
+        final String username = customer.getUsername();
+
+        // When try to find by username in repository
+        Optional<Customer> result = customerRepository.findByUsername(username);
+
+        // Then customer is found
+        assertThat(result).isPresent();
+        assertThat(result.map(Customer::getUsername)).contains(customer.getUsername());
+
+    }
+
+
+
+    @Test
+    void findByUsername_shouldReturnEmpty_whenUsernameNotExists () {
+        // Given a username
+        final String username = "unknownUsername";
+
+        // When try to find by username in repository
+        Optional<Customer> result = customerRepository.findByUsername(username);
+
+        // Then customer is empty
+        assertThat(result).isEmpty();
+
+    }
 
 }

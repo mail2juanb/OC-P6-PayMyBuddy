@@ -124,7 +124,6 @@ class CustomerServiceTest {
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             customerService.getConnectionsById(id);
         });
-
         assertTrue(exception.getMessage().contains("not found"));
         verify(customerRepository, times(1)).findById(id);
 
@@ -285,7 +284,7 @@ class CustomerServiceTest {
     }
 
 
-    // TODO: Modifier la méthode pour lever des exceptions spécifiques -> NotFoundCustomerException
+
     @Test
     void getBalanceById_shouldThrowNotFoundException_whenCustomerDoesNotExist () {
 
@@ -295,20 +294,205 @@ class CustomerServiceTest {
         when(customerRepository.findById(userId)).thenReturn(Optional.empty());
 
         // When try to get balance of customer // Then throw NotFoundException
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+        NotFoundCustomerException exception = assertThrows(NotFoundCustomerException.class, () -> {
             customerService.getBalanceById(userId);
         });
         assertTrue(exception.getMessage().contains("not found"));
+
     }
 
 
 
-    // TODO : Ecrire les tests unitaires pour customerService.getUsernameById
-    // TODO : Ecrire les tests unitaires pour customerService.getEmailById
-    // TODO : Ecrire les tests unitaires pour customerService.updateCustomer
+    @Test
+    void getUsernameById_shouldReturnUsername_whenCustomerExists() {
+
+        // Given an id
+        final Long userId = 1L;
+        final Customer customer = new Customer();
+        customer.setUsername("customer");
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(customer));
+
+        // When try to get customer
+        String result = customerService.getUsernameById(userId);
+
+        // Then username returned
+        assertEquals("customer", result);
+        verify(customerRepository, times(1)).findById(userId);
+
+    }
 
 
 
+    @Test
+    void getUsernameById_shouldThrowNotFoundCustomerException_whenCustomerNotFound() {
+
+        // Given an id
+        final Long userId = 1L;
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // When try to get customer // Then throw NotFoundCustomerException
+        NotFoundCustomerException exception = assertThrows(NotFoundCustomerException.class, () -> {
+            customerService.getUsernameById(userId);
+        });
+        assertTrue(exception.getMessage().contains("not found"));
+        verify(customerRepository, times(1)).findById(userId);
+
+    }
+
+
+
+    @Test
+    void getEmailById_ShouldReturnEmail_WhenCustomerExists() {
+
+        // Given an id
+        final Long userId = 1L;
+        final String email = "test@example.com";
+        final Customer customer = new Customer();
+        customer.setEmail(email);
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(customer));
+
+        // When try to get customer
+        String result = customerService.getEmailById(userId);
+
+        // Then return what expected
+        assertEquals(email, result);
+        verify(customerRepository, times(1)).findById(userId);
+
+    }
+
+
+
+    @Test
+    void getEmailById_shouldThrowNotFoundCustomerException_whenCustomerNotFound() {
+
+        // Given an id
+        Long userId = 1L;
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // When try to get customer // Then throw NotFoundCustomerException
+        NotFoundCustomerException exception = assertThrows(NotFoundCustomerException.class, () -> {
+            customerService.getEmailById(userId);
+        });
+        assertTrue(exception.getMessage().contains("not found"));
+        verify(customerRepository, times(1)).findById(userId);
+
+    }
+
+
+
+    @Test
+    void updateCustomer_shouldUpdateCustomer_whenValidRequest() {
+
+        // Given a userId andnew : username, email and password
+        final Long userId = 1L;
+        final String newUsername = "newUsername";
+        final String newEmail = "new@new.com";
+        final String newPassword = "newPassword";
+        final String encodedPassword = "encodedPassword";
+
+        final Customer existingCustomer = new Customer();
+        existingCustomer.setId(userId);
+        existingCustomer.setUsername("oldUsername");
+        existingCustomer.setEmail("old@old.com");
+        existingCustomer.setPassword("oldPassword");
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(existingCustomer));
+        when(customerRepository.findByUsername(newUsername)).thenReturn(Optional.empty());
+        when(customerRepository.findByEmailIgnoreCase(newEmail)).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(newPassword)).thenReturn(encodedPassword);
+
+        // When try to update customer
+        customerService.updateCustomer(userId, newUsername, newEmail, newPassword);
+
+        // Then customer is updated
+        assertEquals(newUsername, existingCustomer.getUsername());
+        assertEquals(newEmail, existingCustomer.getEmail());
+        assertEquals(encodedPassword, existingCustomer.getPassword());
+        verify(customerRepository).save(existingCustomer);
+
+    }
+
+
+
+
+    @Test
+    void updateCustomer_shouldThrowNotFoundCustomerException_whenCustomerNotFound() {
+
+        // Given userId
+        final Long userId = 1L;
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // When try to update customer // Then throw NotFoundCustomerException
+        NotFoundCustomerException exception = assertThrows(NotFoundCustomerException.class, () ->
+                customerService.updateCustomer(userId, "newUsername", "new@example.com", "newPassword")
+        );
+        assertTrue(exception.getMessage().contains("not found"));
+        verify(customerRepository, never()).save(any());
+
+    }
+
+
+
+    @Test
+    void updateCustomer_shouldThrowAlreadyTakenUsernameException_whenUsernameAlreadyTaken() {
+
+        // Given userId and  new username already taken
+        final Long userId = 1L;
+        final String newUsername = "takenUsername";
+
+        final Customer existingCustomer = new Customer();
+        existingCustomer.setId(userId);
+        existingCustomer.setUsername("oldUsername");
+        existingCustomer.setEmail("old@example.com");
+
+        final Customer anotherCustomer = new Customer();
+        anotherCustomer.setId(2L);
+        anotherCustomer.setUsername(newUsername);
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(existingCustomer));
+        when(customerRepository.findByUsername(newUsername)).thenReturn(Optional.of(anotherCustomer));
+
+        // When try to update customer // Then throw AlreadyTakenUsernameException
+        AlreadyTakenUsernameException exception = assertThrows(AlreadyTakenUsernameException.class, () ->
+                customerService.updateCustomer(userId, newUsername, "new@example.com", "newPassword")
+        );
+        assertTrue(exception.getMessage().contains("already"));
+        verify(customerRepository, never()).save(any());
+
+    }
+
+
+
+    @Test
+    void updateCustomer_shouldThrowAlreadyTakenEmailException_whenEmailAlreadyTaken() {
+        // Given userId and new email already taken
+        final Long userId = 1L;
+        final String newEmail = "taken@example.com";
+
+        final Customer existingCustomer = new Customer();
+        existingCustomer.setId(userId);
+        existingCustomer.setUsername("oldUsername");
+        existingCustomer.setEmail("old@example.com");
+
+        final Customer anotherCustomer = new Customer();
+        anotherCustomer.setId(2L);
+        anotherCustomer.setEmail(newEmail);
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(existingCustomer));
+        when(customerRepository.findByEmailIgnoreCase(newEmail)).thenReturn(Optional.of(anotherCustomer));
+
+        // When try to update customer // Then throw AlreadyTakenEmailException
+        AlreadyTakenEmailException exception = assertThrows(AlreadyTakenEmailException.class, () ->
+                customerService.updateCustomer(userId, "newUsername", newEmail, "newPassword")
+        );
+        assertTrue(exception.getMessage().contains("already"));
+        verify(customerRepository, never()).save(any());
+    }
 
 
 }

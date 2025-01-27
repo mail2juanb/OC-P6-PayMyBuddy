@@ -13,12 +13,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -36,9 +36,6 @@ public class TransactionServiceTest {
     private TransactionServiceImpl transactionService;
 
 
-
-
-    // TODO : Ecrire les tests unitaires pour la méthode : List<Transaction> getTransactionsById(Long userId)
 
 
     @Test
@@ -77,6 +74,7 @@ public class TransactionServiceTest {
 
     @Test
     void createTransfert_shouldThrowNotFoundCustomerException_whenCustomerNotFound () {
+
         // Given customer and relation id
         final Long customerId = 98L;
         final Long relationId = 99L;
@@ -92,6 +90,7 @@ public class TransactionServiceTest {
 
     @Test
     void createTransfert_shouldThrowNotFoundRelationException_whenRelationNotFound () {
+
         // Given customer and relation id
         final Long customerId = 98L;
         final Long relationId = 99L;
@@ -103,12 +102,14 @@ public class TransactionServiceTest {
 
         // When try to create transfert // Then throw NotFoundRelationException
         assertThrows(NotFoundRelationException.class, () -> transactionService.createTransfert(customerId, relationId, "desc", BigDecimal.TEN));
+
     }
 
 
 
     @Test
     void createTransfert_shouldThrowConflictYourselfException_whenSameCustomerAndRelation () {
+
         // Given customer id
         final Long customerId = 1L;
         final Customer customer = new Customer();
@@ -118,12 +119,14 @@ public class TransactionServiceTest {
 
         // When try to create transfert // Then throw ConflictYourselfException
         assertThrows(ConflictYourselfException.class, () -> transactionService.createTransfert(customerId, customerId, "desc", BigDecimal.TEN));
+
     }
 
 
 
     @Test
     void createTransfert_shouldThrowConflictConnectionException_whenNoConnectionsList () {
+
         // Given customer and relation ids
         final Long customerId = 98L;
         final Long relationId = 99L;
@@ -138,12 +141,14 @@ public class TransactionServiceTest {
 
         // When try to create transfert // Then throw ConflictConnectionException
         assertThrows(ConflictConnectionException.class, () -> transactionService.createTransfert(customerId, relationId, "desc", BigDecimal.TEN));
+
     }
 
 
 
     @Test
     void createTransfert_shouldThrowConflictConnectionException_whenRelationNotInConnectionsList () {
+
         // Given customer and relation ids
         final Long customerId = 98L;
         final Long relationId = 99L;
@@ -158,12 +163,14 @@ public class TransactionServiceTest {
 
         // When try to create transfert // Then throw ConflictConnectionException
         assertThrows(ConflictConnectionException.class, () -> transactionService.createTransfert(customerId, relationId, "desc", BigDecimal.TEN));
+
     }
 
 
 
     @Test
     void createTransfert_shouldThrowConflictExceedsException_whenBalanceIsInsufficient() {
+
         // Given customer and relation ids
         final Long customerId = 98L;
         final Long relationId = 99L;
@@ -183,6 +190,47 @@ public class TransactionServiceTest {
 
         // When try to create transfert // Then throw ConflictExceedsException
         assertThrows(ConflictExceedsException.class, () -> transactionService.createTransfert(customerId, relationId, "desc", amount));
+
+    }
+
+
+
+    @Test
+    void getTransactionsById_shouldReturnTransactions_whenCustomerExists() {
+
+        // Given userId
+        final Long userId = 1L;
+        final List<Transaction> transactions = new ArrayList<>();
+        transactions.add(new Transaction());
+        transactions.add(new Transaction());
+
+        final Customer existingCustomer = new Customer();
+        existingCustomer.setSentTransactions(transactions);
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(existingCustomer));
+
+        // When try to get transaction list
+        List<Transaction> result = transactionService.getTransactionsById(userId);
+
+        // Then get transaction list
+        assertEquals(2, result.size());
+        assertSame(transactions, result);
+        verify(customerRepository, times(1)).findById(userId);
+
+    }
+
+
+
+    @Test
+    void getTransactionsById_shouldThrowNotFoundCustomerException_whenCustomerNotFound() {
+        // Given userId
+        final Long userId = 1L;
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // When try to get transaction list // Then throw NotFoundCustomerException
+        assertThrows(NotFoundCustomerException.class, () -> transactionService.getTransactionsById(userId));
+
     }
 
 }
