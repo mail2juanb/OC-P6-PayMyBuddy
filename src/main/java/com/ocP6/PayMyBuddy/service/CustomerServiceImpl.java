@@ -26,9 +26,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     public void createCustomer(String username, String email, String password) {
 
+        // NOTE : Si le username existe déjà dans la bdd alors, on lève une exception
+        if (customerRepository.findByUsername(username).isPresent()) {
+            throw new AlreadyTakenUsernameException("Le nom d'utilisateur est déjà utilisé, veuillez en choisir un autre");
+        }
+
         // NOTE : Si l'email existe déjà dans la bdd alors, on lève une Exception
         if (customerRepository.findByEmailIgnoreCase(email).isPresent()) {
-            throw new ConflictException("Email already exist -> " + email);
+            throw new AlreadyTakenEmailException("L'email est déjà utilisé, veuillez en choisir un autre");
         }
 
         String hashedPassword = passwordEncoder.encode(password);

@@ -15,15 +15,30 @@
     <h1>Pay My Buddy</h1>
 
     <form th:action="@{/register}" th:object="${registerRequest}" method="post">
-        <input type="text" name="username" placeholder="username" required>
-        <input type="email" name="email" placeholder="Mail" required>
-        <input type="password" name="password" placeholder="Mot de passe" required>
+        <input type="text" th:field="*{username}" placeholder="username" required>
+        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></span>
+
+        <input type="email" th:field="*{email}" placeholder="Mail" required>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></span>
+
+        <input type="password" th:field="*{password}" placeholder="Mot de passe" required>
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
+
         <button type="submit">S'inscrire</button>
     </form>
 
-    <!-- Section pour afficher le message d'erreur -->
-    <div th:if="${param.error}" class="error-message">
-        <p>Email already exists. Please try another one.</p>
+    <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <!-- Section pour afficher les messages d'erreur provenant de la validation -->
+    <div th:if="${errorMessages}" class="error-message">
+        <ul>
+            <li th:each="msg : ${errorMessages}">
+                <span th:text="${msg}"></span>
+            </li>
+        </ul>
     </div>
 </div>
 
