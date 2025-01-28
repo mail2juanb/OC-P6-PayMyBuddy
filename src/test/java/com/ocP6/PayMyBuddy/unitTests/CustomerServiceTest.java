@@ -38,15 +38,16 @@ class CustomerServiceTest {
 
 
     @Test
-    void createCustomer_shouldSaveCustomer_whenEmailDoesNotExist () {
+    void createCustomer_shouldSaveCustomer_whenEmailAndUsernameDoesNotExist () {
 
-        // Given
+        // Given username, email and password
         final String username = "JohnDoe";
         final String email = "johndoe@example.com";
         final String password = "password";
         final String encodedPassword = "$2y$10$ogVEZam4sYSOGDpnMk81VeUKE.0OyKeE3mNeeRkaullSWtS0pzyXa";
 
         when(passwordEncoder.encode(password)).thenReturn(encodedPassword);
+        when(customerRepository.findByUsername(username)).thenReturn(Optional.empty());
         when(customerRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.empty());
 
         // When try to create a customer
@@ -54,19 +55,47 @@ class CustomerServiceTest {
 
         // Then customer is created
         ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
-        verify(customerRepository).save(customerCaptor.capture());
+        verify(customerRepository, times(1)).save(customerCaptor.capture());
+        verify(passwordEncoder, times(1)).encode(password);
 
         Customer savedCustomer = customerCaptor.getValue();
         assertEquals(username, savedCustomer.getUsername());
         assertEquals(email, savedCustomer.getEmail());
         assertEquals(encodedPassword, savedCustomer.getPassword());
+        assertEquals(BigDecimal.ZERO, savedCustomer.getBalance()); // Vérification du solde initial
+        assertNotNull(savedCustomer.getSentTransactions());
+        assertTrue(savedCustomer.getSentTransactions().isEmpty());
+        assertNotNull(savedCustomer.getReceivedTransactions());
+        assertTrue(savedCustomer.getReceivedTransactions().isEmpty());
+        assertNotNull(savedCustomer.getConnections());
+        assertTrue(savedCustomer.getConnections().isEmpty());
+
+        verifyNoMoreInteractions(customerRepository, passwordEncoder);
 
     }
 
 
 
     @Test
-    void createCustomer_shouldThrowConflictException_whenEmailAlreadyExists () {
+    void createCustomer_shouldThrowAlreadyTakenUsernameException_whenUsernameAlreadyExists () {
+
+        // Given
+        final String username = "JohnDoe";
+        final String email = "johndoe@example.com";
+        final String password = "password";
+
+        when(customerRepository.findByUsername(username)).thenReturn(Optional.of(new Customer()));
+
+        // When customer try to be registered // Then a AlreadyTakenUsernameException is thrown
+        assertThrows(AlreadyTakenUsernameException.class, () -> customerService.createCustomer(username, email, password));
+        verify(customerRepository, never()).save(any(Customer.class));
+
+    }
+
+
+
+    @Test
+    void createCustomer_shouldThrowAlreadyTakenEmailException_whenEmailAlreadyExists () {
 
         // Given
         final String username = "JohnDoe";
@@ -75,11 +104,8 @@ class CustomerServiceTest {
 
         when(customerRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.of(new Customer()));
 
-        // When customer try to be registred // Then a Conflict Exception is thrown
-        ConflictException exception = assertThrows(ConflictException.class, () ->
-                customerService.createCustomer(username, email, password)
-                );
-        assertTrue(exception.getMessage().contains("already"));
+        // When customer try to be registered // Then a AlreadyTakenEmailException is thrown
+        assertThrows(AlreadyTakenEmailException.class, () -> customerService.createCustomer(username, email, password));
         verify(customerRepository, never()).save(any(Customer.class));
 
     }
@@ -121,10 +147,7 @@ class CustomerServiceTest {
         when(customerRepository.findById(id)).thenReturn(Optional.empty());
 
         // When try to get connections // Then throw a NotFoundException
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
-            customerService.getConnectionsById(id);
-        });
-        assertTrue(exception.getMessage().contains("not found"));
+        assertThrows(NotFoundException.class, () -> customerService.getConnectionsById(id));
         verify(customerRepository, times(1)).findById(id);
 
     }
@@ -177,8 +200,15 @@ class CustomerServiceTest {
         assertTrue(customer.getConnections().contains(friend));
         assertTrue(friend.getConnections().contains(customer));
 
+        verify(customerRepository, times(1)).findById(customer.getId());
+        verify(customerRepository, times(1)).findByEmailIgnoreCase(friend.getEmail());
         verify(customerRepository, times(1)).save(customer);
         verify(customerRepository, times(1)).save(friend);
+
+        verifyNoMoreInteractions(customerRepository);
+
+        assertEquals(1, customer.getConnections().size());
+        assertEquals(1, friend.getConnections().size());
 
     }
 
@@ -281,6 +311,9 @@ class CustomerServiceTest {
         assertNotNull(result);
         assertEquals(expectedBalance, result);
 
+        verify(customerRepository, times(1)).findById(customer.getId());
+        verifyNoMoreInteractions(customerRepository);
+
     }
 
 
@@ -294,10 +327,7 @@ class CustomerServiceTest {
         when(customerRepository.findById(userId)).thenReturn(Optional.empty());
 
         // When try to get balance of customer // Then throw NotFoundException
-        NotFoundCustomerException exception = assertThrows(NotFoundCustomerException.class, () -> {
-            customerService.getBalanceById(userId);
-        });
-        assertTrue(exception.getMessage().contains("not found"));
+        assertThrows(NotFoundCustomerException.class, () -> customerService.getBalanceById(userId));
 
     }
 
@@ -333,10 +363,7 @@ class CustomerServiceTest {
         when(customerRepository.findById(userId)).thenReturn(Optional.empty());
 
         // When try to get customer // Then throw NotFoundCustomerException
-        NotFoundCustomerException exception = assertThrows(NotFoundCustomerException.class, () -> {
-            customerService.getUsernameById(userId);
-        });
-        assertTrue(exception.getMessage().contains("not found"));
+        assertThrows(NotFoundCustomerException.class, () -> customerService.getUsernameById(userId));
         verify(customerRepository, times(1)).findById(userId);
 
     }
@@ -360,6 +387,7 @@ class CustomerServiceTest {
         // Then return what expected
         assertEquals(email, result);
         verify(customerRepository, times(1)).findById(userId);
+        verifyNoMoreInteractions(customerRepository);
 
     }
 
@@ -374,10 +402,7 @@ class CustomerServiceTest {
         when(customerRepository.findById(userId)).thenReturn(Optional.empty());
 
         // When try to get customer // Then throw NotFoundCustomerException
-        NotFoundCustomerException exception = assertThrows(NotFoundCustomerException.class, () -> {
-            customerService.getEmailById(userId);
-        });
-        assertTrue(exception.getMessage().contains("not found"));
+        assertThrows(NotFoundCustomerException.class, () -> customerService.getEmailById(userId));
         verify(customerRepository, times(1)).findById(userId);
 
     }
@@ -387,7 +412,7 @@ class CustomerServiceTest {
     @Test
     void updateCustomer_shouldUpdateCustomer_whenValidRequest() {
 
-        // Given a userId andnew : username, email and password
+        // Given a userId and new : username, email and password
         final Long userId = 1L;
         final String newUsername = "newUsername";
         final String newEmail = "new@new.com";
@@ -412,7 +437,11 @@ class CustomerServiceTest {
         assertEquals(newUsername, existingCustomer.getUsername());
         assertEquals(newEmail, existingCustomer.getEmail());
         assertEquals(encodedPassword, existingCustomer.getPassword());
-        verify(customerRepository).save(existingCustomer);
+
+        verify(customerRepository, times(1)).findById(userId);
+        verify(customerRepository, times(1)).save(existingCustomer);
+        verify(passwordEncoder, times(1)).encode(newPassword);
+        verifyNoMoreInteractions(customerRepository, passwordEncoder);
 
     }
 
@@ -487,10 +516,7 @@ class CustomerServiceTest {
         when(customerRepository.findByEmailIgnoreCase(newEmail)).thenReturn(Optional.of(anotherCustomer));
 
         // When try to update customer // Then throw AlreadyTakenEmailException
-        AlreadyTakenEmailException exception = assertThrows(AlreadyTakenEmailException.class, () ->
-                customerService.updateCustomer(userId, "newUsername", newEmail, "newPassword")
-        );
-        assertTrue(exception.getMessage().contains("already"));
+        assertThrows(AlreadyTakenEmailException.class, () -> customerService.updateCustomer(userId, "newUsername", newEmail, "newPassword"));
         verify(customerRepository, never()).save(any());
     }
 

@@ -8,12 +8,12 @@ import com.ocP6.PayMyBuddy.repository.TransactionRepository;
 import com.ocP6.PayMyBuddy.service.TransactionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -65,8 +65,22 @@ public class TransactionServiceTest {
         // Then
         assertEquals(new BigDecimal("50.00"), customer.getBalance()); // 100 - 50
         assertEquals(new BigDecimal("70.00"), relation.getBalance()); // 20 + 50
-        verify(transactionRepository).save(any(Transaction.class));
-        verify(customerRepository, times(2)).save(any(Customer.class));
+
+        verify(customerRepository, times(1)).findById(customerId);
+        verify(customerRepository, times(1)).findById(relationId);
+        verify(customerRepository, times(1)).save(customer);
+        verify(customerRepository, times(1)).save(relation);
+
+        ArgumentCaptor<Transaction> transactionCaptor = ArgumentCaptor.forClass(Transaction.class);
+        verify(transactionRepository).save(transactionCaptor.capture());
+
+        Transaction savedTransaction = transactionCaptor.getValue();
+        assertEquals(customer, savedTransaction.getSender());
+        assertEquals(relation, savedTransaction.getReceiver());
+        assertEquals(description, savedTransaction.getDescription());
+        assertEquals(amount, savedTransaction.getAmount());
+
+        verifyNoMoreInteractions(customerRepository, transactionRepository);
 
     }
 
@@ -200,9 +214,9 @@ public class TransactionServiceTest {
 
         // Given userId
         final Long userId = 1L;
-        final List<Transaction> transactions = new ArrayList<>();
-        transactions.add(new Transaction());
-        transactions.add(new Transaction());
+        final Transaction t1 = new Transaction();
+        final Transaction t2 = new Transaction();
+        final List<Transaction> transactions = List.of(t1, t2);
 
         final Customer existingCustomer = new Customer();
         existingCustomer.setSentTransactions(transactions);
@@ -215,7 +229,11 @@ public class TransactionServiceTest {
         // Then get transaction list
         assertEquals(2, result.size());
         assertSame(transactions, result);
+        assertTrue(result.contains(t1));
+        assertTrue(result.contains(t2));
+
         verify(customerRepository, times(1)).findById(userId);
+        verifyNoMoreInteractions(customerRepository);
 
     }
 
