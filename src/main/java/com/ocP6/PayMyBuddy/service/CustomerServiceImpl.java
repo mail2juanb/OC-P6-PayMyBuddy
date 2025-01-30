@@ -49,7 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customerRepository.findById(userId)
                 .map(Customer::getConnections)
-                .orElseThrow(() -> new NotFoundException("Id not found -> " + userId));
+                .orElseThrow(() -> new NotFoundException("L'ID est introuvable : " + userId));
 
     }
 
@@ -59,24 +59,24 @@ public class CustomerServiceImpl implements CustomerService {
 
         // NOTE: Récupère le customer correspondant à l'id.
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + customerId));
+                .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet ID : " + customerId));
 
         // NOTE: Vérifier si l'email existe.
         Customer addCustomer = customerRepository.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with email -> " + email));
+                .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet email : " + email));
 
         // NOTE: Récupère l'id correspondant à l'email
         Long addCustomerId = addCustomer.getId();
 
         // NOTE: Vérifie que ce n'est pas le même customer.
         if (addCustomerId.equals(customerId)) {
-            throw new ConflictYourselfException("You can't be connected to yourself");
+            throw new ConflictYourselfException("Vous ne pouvez être en relation avec vous même !");
         }
 
         // NOTE: Vérifier que les 2 Customer ne sont pas déjà amis
         List<Customer> connections = customer.getConnections();
         if (connections.stream().anyMatch(c -> c.getId().equals(addCustomerId))) {
-            throw new ConflictConnectionException("You are already connected with -> " + email);
+            throw new ConflictConnectionException("Vous êtes déjà en relation avec cet utilisateur : " + email);
         }
 
         // NOTE: Ajouter la relation entre eux
@@ -92,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
     public BigDecimal getBalanceById(Long userId) {
 
         Customer customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + userId));
+                .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet ID : " + userId));
         return customer.getBalance();
 
     }
@@ -102,7 +102,7 @@ public class CustomerServiceImpl implements CustomerService {
     public String getUsernameById(Long userId) {
 
         Customer customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + userId));
+                .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet ID : " + userId));
         return customer.getUsername();
 
     }
@@ -112,7 +112,7 @@ public class CustomerServiceImpl implements CustomerService {
     public String getEmailById(Long userId) {
 
         Customer customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + userId));
+                .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet ID : " + userId));
         return customer.getEmail();
 
     }
@@ -123,19 +123,19 @@ public class CustomerServiceImpl implements CustomerService {
 
         // NOTE : Récupérer le Customer original
         Customer customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundCustomerException("Customer not found with id -> " + userId));
+                .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet ID : " + userId));
 
         // NOTE : Vérifier que le username de la request n'est pas déjà utilisé par un autre customer
         customerRepository.findByUsername(usernameRequest).ifPresent(foundCustomer -> {
             if (!foundCustomer.getId().equals(userId)) {
-                throw new AlreadyTakenUsernameException("Username is already taken.");
+                throw new AlreadyTakenUsernameException("Ce nom d'utilisateur est déjà utilisé. Veuillez en choisir un autre.");
             }
         });
 
         // NOTE : Vérifier que l'email de la request n'est pas utilisé par un autre customer
         customerRepository.findByEmailIgnoreCase(emailRequest).ifPresent(existingCustomer -> {
             if (!existingCustomer.getId().equals(userId)) {
-                throw new AlreadyTakenEmailException("Email is already taken.");
+                throw new AlreadyTakenEmailException("Cet email est déjà utilisé. Veuillez en choisir un autre.");
             }
         });
 

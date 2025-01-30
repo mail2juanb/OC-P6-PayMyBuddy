@@ -43,19 +43,18 @@
         <button type="submit">Modifier</button>
     </form>
 
-    <!-- Message d'erreur - profil - Customer not found -->
-    <div th:if="${param.errorCustomerNotFound}" class="profil-error-message">
-        Vous n'êtes pas reconnu par le système.
+    <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
     </div>
 
-    <!-- Message d'erreur - profil - Username is already taken -->
-    <div th:if="${param.errorUsernameTaken}" class="profil-error-message">
-        Ce username est déjà utilisé. Merci d'en choisir un autre.
-    </div>
-
-    <!-- Message d'erreur - profil - Email is already taken -->
-    <div th:if="${param.errorEmailTaken}" class="profil-error-message">
-        Cet email est déjà utilisé. Merci d'en utiliser un autre.
+    <!-- Section pour afficher les messages d'erreur provenant de la validation -->
+    <div th:if="${errorMessages}" class="error-message">
+        <ul>
+            <li th:each="msg : ${errorMessages}">
+                <span th:text="${msg}"></span>
+            </li>
+        </ul>
     </div>
 
 </main>

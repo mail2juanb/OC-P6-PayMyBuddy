@@ -2,18 +2,19 @@ package com.ocP6.PayMyBuddy.controller;
 
 import com.ocP6.PayMyBuddy.configuration.SecurityTools;
 import com.ocP6.PayMyBuddy.dto.ProfilRequest;
-import com.ocP6.PayMyBuddy.exception.AlreadyTakenEmailException;
-import com.ocP6.PayMyBuddy.exception.AlreadyTakenUsernameException;
-import com.ocP6.PayMyBuddy.exception.NotFoundCustomerException;
 import com.ocP6.PayMyBuddy.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -39,39 +40,55 @@ public class ProfilController {
         model.addAttribute("username", username);
         model.addAttribute("email", email);
 
+        // NOTE : Instancie l'objet pour la requête du formulaire
+        model.addAttribute("profilRequest", new ProfilRequest());
+
         return "profil";
     }
 
 
 
     @PostMapping("/profil")
-    public String updateProfil(@Valid @ModelAttribute("profilRequest") ProfilRequest request) {
+    public String updateProfil(@Valid @ModelAttribute("profilRequest") ProfilRequest request, BindingResult result, Model model) {
 
         // NOTE : Récupère l'id de l'utilisateur connecté
         Long userId = SecurityTools.getConnectedUser().getId();
 
-        // NOTE : Récupère le username contenu dans la request
-        String username = request.getUsername();
+        // NOTE : Datas pour rechargement de la page
+        String username = customerService.getUsernameById(userId);
+        String email = customerService.getEmailById(userId);
 
-        // NOTE : Récupère l'email contenu dans la request
-        String email = request.getEmail();
+        if(result.hasErrors()){
+            List<String> messages = result.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .toList();
 
-        // NOTE : Récupère le password contenu dans la request
-        String password = request.getPassword();
+            model.addAttribute("errorMessages", messages);
+            model.addAttribute("transactionRequest", request);
+            model.addAttribute("username", username);
+            model.addAttribute("email", email);
+
+            return "profil";
+        }
+
+
+        // NOTE : Récupère le contenu dans la request
+        String usernameRequest = request.getUsername();
+        String emailRequest = request.getEmail();
+        String passwordRequest = request.getPassword();
 
         // NOTE : Demande au service de mettre à jour le customer
         try {
-            customerService.updateCustomer(userId, username, email, password);
-            return "redirect:/transfert?profil=true";                                       // Redirection vers la page de transfert en cas de succès
-        } catch (NotFoundCustomerException exception) {
-            log.error("NotFoundCustomerException during updateProfil: {}", exception.getMessage());
-            return "redirect:/profil?errorCustomerNotFound=true";                           // Le Customer n'existe pas
-        } catch (AlreadyTakenUsernameException exception) {
-            log.error("AlreadyTakenUsernameException during updateProfil: {}", exception.getMessage());
-            return "redirect:/profil?errorUsernameTaken=true";                              // Le username est déjà utilisé par un autre customer
-        } catch (AlreadyTakenEmailException exception) {
-            log.error("AlreadyTakenEmailException during updateProfil: {}", exception.getMessage());
-            return "redirect:/profil?errorEmailTaken=true";                                 // L'email est déjà utilisé par un autre customer
+            customerService.updateCustomer(userId, usernameRequest, emailRequest, passwordRequest);
+            return "redirect:/transfert?profil=true";                                                                   // Redirection vers la page de transfert en cas de succès
+        } catch (Exception exception) {
+            log.error("{} during updateCustomer: {}", exception.getClass().getSimpleName(), exception.getMessage());
+            model.addAttribute("errorMessage", exception.getMessage());
+            model.addAttribute("profilRequest", request);
+            model.addAttribute("username", username);
+            model.addAttribute("email", email);
+            return "profil";                                                                                            // Retourner la vue pour affichage de ou des erreurs
         }
 
     }

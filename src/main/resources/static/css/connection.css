@@ -79,11 +79,18 @@ body {
     background-color: #cc8400;
 }
 
-/* Message de connection */
-.connection-error {
+/* Message d'erreur */
+.error-message {
     color: red;
     font-weight: bold;
     font-size: 14px;
     padding: 10px;
     margin: 10px 0;
+}
+
+/* Message d'erreur pour les listes */
+.error-message ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }

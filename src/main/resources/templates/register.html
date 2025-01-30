@@ -16,14 +16,8 @@
 
     <form th:action="@{/register}" th:object="${registerRequest}" method="post">
         <input type="text" th:field="*{username}" placeholder="username" required>
-        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></span>
-
         <input type="email" th:field="*{email}" placeholder="Mail" required>
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></span>
-
         <input type="password" th:field="*{password}" placeholder="Mot de passe" required>
-        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
-
         <button type="submit">S'inscrire</button>
     </form>
 

@@ -64,3 +64,10 @@ body {
     padding: 10px;
     margin: 10px 0;
 }
+
+/* Message d'erreur pour les listes */
+.error-message ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
