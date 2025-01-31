@@ -1,4 +1,4 @@
-package com.ocP6.PayMyBuddy.unitTests;
+package com.ocP6.PayMyBuddy;
 
 import com.ocP6.PayMyBuddy.exception.*;
 import com.ocP6.PayMyBuddy.model.Customer;

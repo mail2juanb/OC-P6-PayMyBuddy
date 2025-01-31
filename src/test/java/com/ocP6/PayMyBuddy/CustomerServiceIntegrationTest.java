@@ -1,4 +1,4 @@
-package com.ocP6.PayMyBuddy.integrationTests;
+package com.ocP6.PayMyBuddy;
 
 
 import com.ocP6.PayMyBuddy.exception.ConflictException;
