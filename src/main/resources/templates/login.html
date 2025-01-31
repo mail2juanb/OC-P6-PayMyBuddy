@@ -14,9 +14,17 @@
         <h1>Pay My Buddy</h1>
 
         <form th:action="@{/login}" th:object="${loginRequest}" method="post">
-            <input type="email" name="email" placeholder="Mail" required>
-            <input type="password" name="password" placeholder="Mot de passe" required>
-            <button type="submit">Se connecter</button>
+
+            <label for="email" class="invisible-label">Adresse email</label>
+            <input id="email" type="email" name="email" placeholder="Mail" required aria-describedby="emailHelp">
+            <small id="emailHelp" class="form-text text-muted">Entrez votre adresse email</small>
+
+            <label for="password" class="invisible-label">Mot de passe</label>
+            <input id="password" type="password" name="password" placeholder="Mot de passe" required aria-describedby="passwordHelp">
+            <small id="passwordHelp" class="form-text text-muted">Entrez votre mot de passe</small>
+
+            <button type="submit" aria-label="Se connecter avec l'email et le mot de passe envoyé">Se connecter</button>
+
         </form>
 
         <!-- Message de confirmation d'inscription -->
@@ -32,7 +40,7 @@
         <!-- Bouton pour aller à la page d'inscription -->
         <div class="register-link">
             <p>Pas encore de compte ?</p>
-            <a th:href="@{/register}" class="register-button">S'inscrire</a>
+            <a th:href="@{/register}" class="register-button" role="link" aria-label="Page d'inscription">S'inscrire</a>
         </div>
 
         <!-- Message de logout -->
@@ -41,4 +49,5 @@
         </div>
     </div>
 </body>
+
 </html>
