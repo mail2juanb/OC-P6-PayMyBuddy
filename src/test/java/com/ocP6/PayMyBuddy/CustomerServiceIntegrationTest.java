@@ -41,7 +41,7 @@ class CustomerServiceIntegrationTest {
     private PasswordEncoder passwordEncoder;
 
 
-// TODO : Je pense que ces tests ne sont pas correct. Ce sont des tests d'intégration à écrire à partir du controller...
+// TODO : Tout ceci est à supprimer car déjà testé unitairement
 
     @Test
     void createCustomer_shouldAddCustomer() {

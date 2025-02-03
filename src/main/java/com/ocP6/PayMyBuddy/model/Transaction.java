@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 import java.math.BigDecimal;
@@ -21,11 +22,13 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "sender", nullable = false)
+    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private Customer sender;
 
 
     @ManyToOne
     @JoinColumn(name = "receiver", nullable = false)
+    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private Customer receiver;
 
 

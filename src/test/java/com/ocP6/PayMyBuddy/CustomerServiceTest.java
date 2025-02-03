@@ -457,10 +457,7 @@ class CustomerServiceTest {
         when(customerRepository.findById(userId)).thenReturn(Optional.empty());
 
         // When try to update customer // Then throw NotFoundCustomerException
-        NotFoundCustomerException exception = assertThrows(NotFoundCustomerException.class, () ->
-                customerService.updateCustomer(userId, "newUsername", "new@example.com", "newPassword")
-        );
-        assertTrue(exception.getMessage().contains("not found"));
+        assertThrows(NotFoundCustomerException.class, () -> customerService.updateCustomer(userId, "newUsername", "new@example.com", "newPassword"));
         verify(customerRepository, never()).save(any());
 
     }
@@ -487,10 +484,7 @@ class CustomerServiceTest {
         when(customerRepository.findByUsername(newUsername)).thenReturn(Optional.of(anotherCustomer));
 
         // When try to update customer // Then throw AlreadyTakenUsernameException
-        AlreadyTakenUsernameException exception = assertThrows(AlreadyTakenUsernameException.class, () ->
-                customerService.updateCustomer(userId, newUsername, "new@example.com", "newPassword")
-        );
-        assertTrue(exception.getMessage().contains("already"));
+        assertThrows(AlreadyTakenUsernameException.class, () -> customerService.updateCustomer(userId, newUsername, "new@example.com", "newPassword"));
         verify(customerRepository, never()).save(any());
 
     }

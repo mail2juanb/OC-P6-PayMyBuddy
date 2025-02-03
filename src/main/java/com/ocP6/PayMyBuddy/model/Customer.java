@@ -1,10 +1,7 @@
 package com.ocP6.PayMyBuddy.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,11 +38,13 @@ public class Customer {
 
     // Relation avec les transactions en tant que Sender
     @OneToMany(mappedBy = "sender")
+    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private List<Transaction> sentTransactions = new ArrayList<>();
 
 
     // Relation avec les transactions en tant que Receiver
     @OneToMany(mappedBy = "receiver")
+    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private List<Transaction> receivedTransactions = new ArrayList<>();
 
 
@@ -56,6 +55,7 @@ public class Customer {
             joinColumns = @JoinColumn(name = "user_id"),                                        // Nom réel de la colonne
             inverseJoinColumns = @JoinColumn(name = "connections_id")                           // Nom réel de l'autre colonne
     )
+    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private List<Customer> connections = new ArrayList<>();
 
 
