@@ -61,7 +61,7 @@ public class ConnectionController {
         } catch (Exception exception) {
             log.error("{} during addConnection: {}", exception.getClass().getSimpleName(), exception.getMessage());
             model.addAttribute("errorMessage", exception.getMessage());
-            model.addAttribute("profilRequest", request);
+            model.addAttribute("connectionRequest", request);
             return "connection";                                                                                        // Retourner la vue pour affichage de ou des erreurs
         }
 
