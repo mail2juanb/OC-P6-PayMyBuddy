@@ -103,3 +103,36 @@ button:hover {
     margin: 0;
 }
 
+/* Lien d'accès rapide */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 10px;
+    background: #0056b3;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+
+.skip-link:focus {
+    top: 10px;
+}
+
+.form-text.text-muted {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+}
+

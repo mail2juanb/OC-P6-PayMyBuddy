@@ -5,59 +5,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de Profil - Pay My Buddy</title>
-    <link rel="stylesheet" href="/css/profil.css">
+<!--    <link rel="stylesheet" href="/css/profil.css">-->
+    <link th:href="@{/css/profil.css}" rel="stylesheet">
 </head>
 
 <body>
 
-<header>
+    <!-- Lien d'accès rapide -->
+    <a href="#username" class="skip-link">Aller au champ de saisie</a>
 
-    <h1>Pay My Buddy</h1>
+    <header>
 
-    <nav>
-        <a th:href="@{transfert}">Transférer</a>
-        <a th:href="@{profil}" class="active">Profil</a>
-        <a th:href="@{connection}">Ajouter relation</a>
-        <a href="#">Se déconnecter</a>
-    </nav>
+        <h1>Pay My Buddy</h1>
 
-</header>
+        <nav>
+            <a th:href="@{transfert}">Transférer</a>
+            <a th:href="@{profil}" class="active">Profil</a>
+            <a th:href="@{connection}">Ajouter relation</a>
+            <a href="#">Se déconnecter</a>
+        </nav>
 
-<main>
+    </header>
 
-    <h2>Profil</h2>
+    <main>
 
-    <form th:action="@{/profil}" th:object="${profilRequest}" method="post" class="profile-info">
-        <div>
-            <label for="username">Username :</label>
-            <input type="text" id="username" name="username" th:value="${username}" class="value" required>
+        <h2>Profil</h2>
+
+        <form th:action="@{/profil}" th:object="${profilRequest}" method="post" class="profile-info">
+            <div>
+                <label for="username">Username :</label>
+                <input type="text" id="username" name="username" th:value="${username}" class="value" required aria-describedby="usernameHelp">
+                <small id="usernameHelp" class="form-text text-muted">Inscrire un nom d'utilisateur valide.</small>
+            </div>
+
+            <div>
+                <label for="email">Mail :</label>
+                <input type="email" id="email" name="email" th:value="${email}" class="value" required aria-describedby="emailHelp">
+                <small id="emailHelp" class="form-text text-muted">Inscrire une adresse email valide.</small>
+            </div>
+
+            <div>
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" placeholder="Mot de passe" class="value" required aria-describedby="passwordHelp">
+                <small id="passwordHelp" class="form-text text-muted">Inscrire un mot de passe.</small>
+            </div>
+
+            <button type="submit" aria-label="Enregistrez les modifications.">Modifier</button>
+        </form>
+
+        <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
+        <div th:if="${errorMessage}" class="error-message" role="alert" aria-live="assertive">
+            <p th:text="${errorMessage}"></p>
         </div>
-        <div>
-            <label for="email">Mail :</label>
-            <input type="email" id="email" name="email" th:value="${email}" class="value" required>
+
+        <!-- Section pour afficher les messages d'erreur provenant de la validation -->
+        <div th:if="${errorMessages}" class="error-message" role="alert" aria-live="assertive">
+            <ul>
+                <li th:each="msg : ${errorMessages}">
+                    <span th:text="${msg}"></span>
+                </li>
+            </ul>
         </div>
-        <div>
-            <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="password" placeholder="Mot de passe" class="value" required>
-        </div>
-        <button type="submit">Modifier</button>
-    </form>
 
-    <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
-    <div th:if="${errorMessage}" class="error-message">
-        <p th:text="${errorMessage}"></p>
-    </div>
-
-    <!-- Section pour afficher les messages d'erreur provenant de la validation -->
-    <div th:if="${errorMessages}" class="error-message">
-        <ul>
-            <li th:each="msg : ${errorMessages}">
-                <span th:text="${msg}"></span>
-            </li>
-        </ul>
-    </div>
-
-</main>
+    </main>
 
 </body>
 
