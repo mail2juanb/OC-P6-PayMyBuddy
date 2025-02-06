@@ -40,12 +40,12 @@
         </form>
 
         <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
-        <div th:if="${errorMessage}" class="error-message" role="alert" aria-live="assertive">
+        <div th:if="${errorMessage}" class="error-message" aria-live="polite">
             <p th:text="${errorMessage}"></p>
         </div>
 
         <!-- Section pour afficher les messages d'erreur provenant de la validation -->
-        <div th:if="${errorMessages}" class="error-message" role="alert" aria-live="assertive">
+        <div th:if="${errorMessages}" class="error-message" aria-live="polite">
             <ul>
                 <li th:each="msg : ${errorMessages}">
                     <span th:text="${msg}"></span>
