@@ -5,11 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de connexion - Pay My Buddy</title>
-    <link rel="stylesheet" href="/css/login.css">
+<!--    <link rel="stylesheet" href="/css/login.css">-->
+    <link th:href="@{/css/login.css}" rel="stylesheet">
 </head>
 
 <body>
-    <div class="login-container">
+    <!-- Lien d'accès rapide -->
+    <a href="#email" class="skip-link">Aller au champ de saisie</a>
+
+    <main class="login-container">
 
         <h1>Pay My Buddy</h1>
 
@@ -33,21 +37,21 @@
         </div>
 
         <!-- Message d'erreur d'input au login -->
-        <div th:if="${param.error}" class="error-message">
+        <div th:if="${param.error}" class="error-message" role="alert" aria-live="assertive">
             Mauvais password ou username.
         </div>
 
         <!-- Bouton pour aller à la page d'inscription -->
         <div class="register-link">
             <p>Pas encore de compte ?</p>
-            <a th:href="@{/register}" class="register-button" role="link" aria-label="Page d'inscription">S'inscrire</a>
+            <a th:href="@{/register}" class="register-button" role="link" aria-label="Aller à la page d'inscription">S'inscrire</a>
         </div>
 
         <!-- Message de logout -->
         <div th:if="${param.logout}" class="success-message">
             Vous avez été déconnecté avec succès.
         </div>
-    </div>
+    </main>
 </body>
 
 </html>

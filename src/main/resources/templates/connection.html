@@ -5,10 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter une relation - Pay My Buddy</title>
-    <link rel="stylesheet" href="/css/connection.css">
+<!--    <link rel="stylesheet" href="/css/connection.css">-->
+    <link th:href="@{/css/connection.css}" rel="stylesheet">
 </head>
 
 <body>
+    <!-- Lien d'accès rapide -->
+    <a href="#email" class="skip-link">Aller au champ de saisie</a>
+
     <header class="navbar">
         <h1>Pay My Buddy</h1>
         <nav>
@@ -24,17 +28,20 @@
         <h2>Chercher une relation</h2>
 
         <form th:action="@{/connection}" th:object="${connectionRequest}" method="post" class="form-section">
-            <input type="email" name="email" placeholder="Saisir une adresse mail" required>
-            <button type="submit">Ajouter</button>
+            <label for="email" class="invisible-label">Email</label>
+            <input type="email" id="email" name="email" placeholder="Saisir une adresse mail" required aria-describedby="emailHelp">
+            <small id="emailHelp" class="form-text text-muted">Inscrire l'email de votre ami.</small>
+
+            <button type="submit" aria-label="Ajoute une relation dans votre liste">Ajouter</button>
         </form>
 
         <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
-        <div th:if="${errorMessage}" class="error-message">
+        <div th:if="${errorMessage}" class="error-message" role="alert" aria-live="assertive">
             <p th:text="${errorMessage}"></p>
         </div>
 
         <!-- Section pour afficher les messages d'erreur provenant de la validation -->
-        <div th:if="${errorMessages}" class="error-message">
+        <div th:if="${errorMessages}" class="error-message" role="alert" aria-live="assertive">
             <ul>
                 <li th:each="msg : ${errorMessages}">
                     <span th:text="${msg}"></span>

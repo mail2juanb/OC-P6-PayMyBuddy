@@ -5,51 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page d'inscription - Pay My Buddy</title>
-    <link rel="stylesheet" href="/css/register.css">
+    <!--    <link rel="stylesheet" href="/css/register.css">-->
+    <link th:href="@{/css/register.css}" rel="stylesheet">
 </head>
 
 <body>
+    <!-- Lien d'accès rapide -->
+    <a href="#username" class="skip-link">Aller au champ de saisie</a>
 
-<div class="registration-container">
+    <main class="registration-container">
 
-    <h1>Pay My Buddy</h1>
+        <h1>Pay My Buddy</h1>
 
-    <form th:action="@{/register}" th:object="${registerRequest}" method="post">
-        <div class="form-group">
-            <label for="username" class="invisible-label">Nom d'utilisateur</label>
-            <input type="text" id="username" th:field="*{username}" placeholder="Nom d'utilisateur" required aria-describedby="usernameHelp">
-            <small id="usernameHelp" class="form-text text-muted">Inscrire un nom d'utilisateur valide.</small>
+        <form th:action="@{/register}" th:object="${registerRequest}" method="post">
+            <div class="form-group">
+                <label for="username" class="invisible-label">Nom d'utilisateur</label>
+                <input type="text" id="username" th:field="*{username}" placeholder="Nom d'utilisateur" required aria-describedby="usernameHelp">
+                <small id="usernameHelp" class="form-text text-muted">Inscrire un nom d'utilisateur valide.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="invisible-label">Adresse email</label>
+                <input type="email" id="email" th:field="*{email}" placeholder="Mail" required aria-describedby="emailHelp">
+                <small id="emailHelp" class="form-text text-muted">Inscrire une adresse email valide.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="invisible-label">Mot de passe</label>
+                <input type="password" id="password" th:field="*{password}" placeholder="Mot de passe" required aria-describedby="passwordHelp">
+                <small id="passwordHelp" class="form-text text-muted">Inscrire un mot de passe.</small>
+            </div>
+
+            <button type="submit" aria-label="Enregistrer votre profil pour utiliser l'application">S'inscrire</button>
+        </form>
+
+        <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
+        <div th:if="${errorMessage}" class="error-message" role="alert" aria-live="assertive">
+            <p th:text="${errorMessage}"></p>
         </div>
 
-        <div class="form-group">
-            <label for="email" class="invisible-label">Adresse email</label>
-            <input type="email" id="email" th:field="*{email}" placeholder="Mail" required aria-describedby="emailHelp">
-            <small id="emailHelp" class="form-text text-muted">Inscrire une adresse email valide.</small>
+        <!-- Section pour afficher les messages d'erreur provenant de la validation -->
+        <div th:if="${errorMessages}" class="error-message" role="alert" aria-live="assertive">
+            <ul>
+                <li th:each="msg : ${errorMessages}">
+                    <span th:text="${msg}"></span>
+                </li>
+            </ul>
         </div>
-
-        <div class="form-group">
-            <label for="password" class="invisible-label">Mot de passe</label>
-            <input type="password" id="password" th:field="*{password}" placeholder="Mot de passe" required aria-describedby="passwordHelp">
-            <small id="passwordHelp" class="form-text text-muted">Inscrire un mot de passe.</small>
-        </div>
-
-        <button type="submit">S'inscrire</button>
-    </form>
-
-    <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
-    <div th:if="${errorMessage}" class="error-message" aria-live="assertive">
-        <p th:text="${errorMessage}"></p>
-    </div>
-
-    <!-- Section pour afficher les messages d'erreur provenant de la validation -->
-    <div th:if="${errorMessages}" class="error-message" aria-live="assertive">
-        <ul>
-            <li th:each="msg : ${errorMessages}">
-                <span th:text="${msg}"></span>
-            </li>
-        </ul>
-    </div>
-</div>
+    </main>
 
 </body>
 
