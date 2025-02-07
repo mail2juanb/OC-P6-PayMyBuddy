@@ -18,7 +18,6 @@
         <h1>Pay My Buddy</h1>
 
         <form th:action="@{/login}" th:object="${loginRequest}" method="post">
-
             <label for="email" class="invisible-label">Adresse email</label>
             <input id="email" type="email" name="email" placeholder="Mail" required aria-describedby="emailHelp">
             <small id="emailHelp" class="form-text text-muted">Entrez votre adresse email</small>
@@ -28,11 +27,10 @@
             <small id="passwordHelp" class="form-text text-muted">Entrez votre mot de passe</small>
 
             <button type="submit" aria-label="Se connecter avec l'email et le mot de passe envoyé">Se connecter</button>
-
         </form>
 
         <!-- Message de confirmation d'inscription -->
-        <div th:if="${param.success}" class="success-message">
+        <div th:if="${param.success}" class="success-message" aria-live="polite">
             Inscription effectuée avec succès.
         </div>
 
@@ -48,7 +46,7 @@
         </div>
 
         <!-- Message de logout -->
-        <div th:if="${param.logout}" class="success-message">
+        <div th:if="${param.logout}" class="success-message" aria-live="polite">
             Vous avez été déconnecté avec succès.
         </div>
     </main>

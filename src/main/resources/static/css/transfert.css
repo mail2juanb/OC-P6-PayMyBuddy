@@ -43,7 +43,19 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Correction de l'affichage du titre et du formulaire */
+.form-section h2 {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px; /* Augmenté pour plus de clarté */
+}
+
 .form-section {
+    display: block;
+    width: 100%;
+}
+
+.form {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -61,7 +73,7 @@ body {
 }
 
 .form-section input[type="number"] {
-    max-width: 100px;
+    max-width: 150px;
 }
 
 .form-section button {
@@ -116,3 +128,55 @@ body {
     padding: 0;
     margin: 0;
 }
+
+/* Lien d'accès rapide */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 10px;
+    background: #0056b3;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+
+.skip-link:focus {
+    top: 10px;
+}
+
+.invisible-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+}
+
+.form-text.text-muted {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+}
+/* Correction des aides visuelles */
+/*.form-text.text-muted {*/
+/*    font-size: 0.875rem;*/
+/*    color: #6c757d;*/
+/*    margin-top: 0.25rem;*/
+/*    margin-bottom: 0.25rem;*/
+/*    display: block; *//* Assure l'affichage du texte d'aide */
+/*}*/
