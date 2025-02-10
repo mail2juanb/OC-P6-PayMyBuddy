@@ -26,11 +26,12 @@
 		<tag/>
 		<url/>
 	</scm>
+
 	<properties>
 		<java.version>21</java.version>
 	</properties>
-	<dependencies>
 
+	<dependencies>
 		<!-- Spring Boot starter Security and BCrypt Encoder -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -47,6 +48,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.annotation</groupId>
+					<artifactId>javax.annotation-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- MySQL Driver -->
@@ -87,6 +94,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.annotation</groupId>
+					<artifactId>javax.annotation-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -100,7 +113,6 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-		<!-- TODO : Verifier si c est utile -->
 		<!-- Spring Security Tests -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -108,7 +120,49 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!--		Jakarta Annotations-->
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 
+		<!--	Fixing vulnerabilities-->
+		<!--	maven:org.apache.tomcat.embed:tomcat-embed-core:10.1.31 is vulnerable-->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>11.0.2</version>
+		</dependency>
+
+		<!--	maven:org.xmlunit:xmlunit-core:2.9.1 is vulnerable-->
+		<dependency>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-core</artifactId>
+			<version>2.10.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!--	maven:ch.qos.logback:logback-core:1.5.11 is vulnerable si je le mets, ça casse mes tests-->
+<!--		<dependency>-->
+<!--			<groupId>ch.qos.logback</groupId>-->
+<!--			<artifactId>logback-core</artifactId>-->
+<!--			<version>1.5.16</version>-->
+<!--		</dependency>-->
+
+		<!--	maven:net.minidev:json-smart:2.5.1 is vulnerable-->
+		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>json-smart</artifactId>
+			<version>2.4.11</version>
+		</dependency>
+
+		<!--	maven:org.springframework.security:spring-security-core:6.3.4 is vulnerable-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>6.3.5</version>
+		</dependency>
 	</dependencies>
 
 	<build>
