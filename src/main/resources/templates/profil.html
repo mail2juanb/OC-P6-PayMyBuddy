@@ -6,30 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de Profil - Pay My Buddy</title>
 <!--    <link rel="stylesheet" href="/css/profil.css">-->
+    <link th:href="@{/css/shared-production.css}" rel="stylesheet">
     <link th:href="@{/css/profil.css}" rel="stylesheet">
 </head>
 
-<body>
+<body th:with="activePage='profil'">
 
     <!-- Lien d'accès rapide -->
     <a href="#username" class="skip-link">Aller au champ de saisie</a>
 
-    <header>
+<!--    <header>-->
 
-        <h1>Pay My Buddy</h1>
+<!--        <h1>Pay My Buddy</h1>-->
 
-        <nav>
-            <a th:href="@{transfert}">Transférer</a>
-            <a th:href="@{profil}" class="active">Profil</a>
-            <a th:href="@{connection}">Ajouter relation</a>
-            <a href="#">Se déconnecter</a>
-        </nav>
+<!--        <nav>-->
+<!--            <a th:href="@{transfert}">Transférer</a>-->
+<!--            <a th:href="@{profil}" class="active">Profil</a>-->
+<!--            <a th:href="@{connection}">Ajouter relation</a>-->
+<!--            <a href="#">Se déconnecter</a>-->
+<!--        </nav>-->
 
-    </header>
+<!--    </header>-->
+
+    <header th:replace="fragments/head.html :: head-fragment"> </header>
 
     <main>
 
-        <h2>Profil</h2>
+        <h1>Profil</h1>
 
         <form th:action="@{/profil}" th:object="${profilRequest}" method="post" class="profile-info">
             <div>

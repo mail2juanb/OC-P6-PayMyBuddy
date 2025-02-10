@@ -6,28 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de transfert - Pay My Buddy</title>
 <!--    <link rel="stylesheet" href="/css/transfert.css">-->
+    <link th:href="@{/css/shared-production.css}" rel="stylesheet">
     <link th:href="@{/css/transfert.css}" rel="stylesheet">
 </head>
 
-<body>
+<body th:with="activePage='transfert'">
+
     <!-- Lien d'accès rapide -->
     <a href="#relation" class="skip-link">Aller au sélecteur</a>
 
-    <header class="navbar">
+<!--    <header class="navbar">-->
 
-        <h1>Pay My Buddy</h1>
-        <nav>
-            <a th:href="@{transfert}" class="active">Transférer</a>
-            <a th:href="@{profil}">Profil</a>
-            <a th:href="@{connection}">Ajouter relation</a>
-            <form th:action="@{/logout}" method="post" style="display: inline;">
-                <a href="javascript:void(0)" onclick="this.closest('form').submit()" >Se déconnecter</a>
-            </form>
-        </nav>
+<!--        <h1>Pay My Buddy</h1>-->
+<!--        <nav>-->
+<!--            <a th:href="@{transfert}" class="active">Transférer</a>-->
+<!--            <a th:href="@{profil}">Profil</a>-->
+<!--            <a th:href="@{connection}">Ajouter relation</a>-->
+<!--            <form th:action="@{/logout}" method="post" style="display: inline;">-->
+<!--                <a href="javascript:void(0)" onclick="this.closest('form').submit()" >Se déconnecter</a>-->
+<!--            </form>-->
+<!--        </nav>-->
 
-    </header>
+<!--    </header>-->
 
-    <main class="container">
+    <header th:replace="fragments/head.html :: head-fragment"> </header>
+
+    <main>
 
         <!-- Message ajout de connection -->
         <div th:if="${param.connection}" class="success-message" aria-live="polite">

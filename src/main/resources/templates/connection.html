@@ -6,26 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter une relation - Pay My Buddy</title>
 <!--    <link rel="stylesheet" href="/css/connection.css">-->
+    <link th:href="@{/css/shared-production.css}" rel="stylesheet">
     <link th:href="@{/css/connection.css}" rel="stylesheet">
 </head>
 
-<body>
+<body th:with="activePage='connection'">
     <!-- Lien d'accès rapide -->
     <a href="#email" class="skip-link">Aller au champ de saisie</a>
 
-    <header class="navbar">
-        <h1>Pay My Buddy</h1>
-        <nav>
-            <a th:href="@{transfert}">Transférer</a>
-            <a th:href="@{profil}">Profil</a>
-            <a th:href="@{connection}" class="active">Ajouter relation</a>
-            <a href="#">Se déconnecter</a>
-        </nav>
-    </header>
+<!--    <header class="navbar">-->
+<!--        <h1>Pay My Buddy</h1>-->
+<!--        <nav>-->
+<!--            <a th:href="@{transfert}">Transférer</a>-->
+<!--            <a th:href="@{profil}">Profil</a>-->
+<!--            <a th:href="@{connection}" class="active">Ajouter relation</a>-->
+<!--            <a href="#">Se déconnecter</a>-->
+<!--        </nav>-->
+<!--    </header>-->
 
-    <main class="container">
+    <header th:replace="fragments/head.html :: head-fragment"> </header>
 
-        <h2>Chercher une relation</h2>
+    <main>
+
+        <h1>Chercher une relation</h1>
 
         <form th:action="@{/connection}" th:object="${connectionRequest}" method="post" class="form-section">
             <label for="email" class="invisible-label">Email</label>

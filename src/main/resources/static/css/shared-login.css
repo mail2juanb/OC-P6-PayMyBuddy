@@ -1,0 +1,144 @@
+/* Corps de la page */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+
+
+/* Conteneur main */
+main {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+}
+
+
+
+
+/* Titre du conteneur */
+h1 {
+    background-color: #f9a825;
+    color: #fff;
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+
+
+
+/* Champs de formulaire */
+input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+
+
+
+/* Bouton de connexion */
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Effet au survol du bouton */
+button:hover {
+    background-color: #0056b3;
+}
+
+
+
+/* Messages d'erreur et succès */
+.success-message {
+    color: green;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.error-message ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+
+/* Liens d'accès rapide */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 10px;
+    background: #0056b3;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+
+.skip-link:focus {
+    top: 10px;
+}
+
+
+
+/* Texte d'aide visuelle caché */
+.form-text.text-muted {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+}
+
+.invisible-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+}
