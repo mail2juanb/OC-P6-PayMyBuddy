@@ -146,7 +146,6 @@
 						</goals>
 						<configuration>
 							<excludes>
-								<exclude>com/ocP6/PayMyBuddy/model/**</exclude>
 								<exclude>com/ocP6/PayMyBuddy/exception/**</exclude>
 								<exclude>com/ocP6/PayMyBuddy/PayMyBuddyApplication*</exclude>
 							</excludes>
