@@ -512,6 +512,99 @@ class CustomerServiceTest {
         // When try to update customer // Then throw AlreadyTakenEmailException
         assertThrows(AlreadyTakenEmailException.class, () -> customerService.updateCustomer(userId, "newUsername", newEmail, "newPassword"));
         verify(customerRepository, never()).save(any());
+
+    }
+
+
+
+    @Test
+    void updateCustomer_shouldThrowAlreadyTakenEmailException_whenOnlyEmailIsAlreadyTaken() {
+        // Given userId and new email already taken, but username remains the same
+        final Long userId = 1L;
+        final String sameUsername = "existingUser";
+        final String takenEmail = "taken@example.com";
+        final String newPassword = "newPassword";
+
+        final Customer existingCustomer = new Customer();
+        existingCustomer.setId(userId);
+        existingCustomer.setUsername(sameUsername);
+        existingCustomer.setEmail("old@example.com");
+
+        final Customer anotherCustomer = new Customer();
+        anotherCustomer.setId(2L);
+        anotherCustomer.setEmail(takenEmail);
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(existingCustomer));
+        when(customerRepository.findByUsername(sameUsername)).thenReturn(Optional.of(existingCustomer)); // Même utilisateur
+        when(customerRepository.findByEmailIgnoreCase(takenEmail)).thenReturn(Optional.of(anotherCustomer));
+
+        // When trying to update customer // Then should throw AlreadyTakenEmailException
+        assertThrows(AlreadyTakenEmailException.class, () -> customerService.updateCustomer(userId, sameUsername, takenEmail, newPassword));
+        verify(customerRepository, never()).save(any());
+
+    }
+
+
+
+    @Test
+    void updateCustomer_shouldThrowAlreadyTakenUsernameException_whenOnlyUsernameIsAlreadyTaken() {
+        // Given userId and new username already taken, but email remains the same
+        final Long userId = 1L;
+        final String takenUsername = "takenUsername";
+        final String sameEmail = "existing@example.com";
+        final String newPassword = "newPassword";
+
+        final Customer existingCustomer = new Customer();
+        existingCustomer.setId(userId);
+        existingCustomer.setUsername("oldUsername");
+        existingCustomer.setEmail(sameEmail);
+
+        final Customer anotherCustomer = new Customer();
+        anotherCustomer.setId(2L);
+        anotherCustomer.setUsername(takenUsername);
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(existingCustomer));
+        when(customerRepository.findByUsername(takenUsername)).thenReturn(Optional.of(anotherCustomer));
+
+        // When trying to update customer // Then should throw AlreadyTakenUsernameException
+        assertThrows(AlreadyTakenUsernameException.class, () -> customerService.updateCustomer(userId, takenUsername, sameEmail, newPassword));
+        verify(customerRepository, never()).save(any());
+
+    }
+
+
+
+    @Test
+    void updateCustomer_shouldUpdatePasswordOnly_whenUsernameAndEmailRemainTheSame() {
+        // Given userId and unchanged username and email, but new password
+        final Long userId = 1L;
+        final String sameUsername = "sameUsername";
+        final String sameEmail = "same@example.com";
+        final String newPassword = "newPassword";
+        final String encodedPassword = "encodedNewPassword";
+
+        final Customer existingCustomer = new Customer();
+        existingCustomer.setId(userId);
+        existingCustomer.setUsername(sameUsername);
+        existingCustomer.setEmail(sameEmail);
+        existingCustomer.setPassword("oldPassword");
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(existingCustomer));
+        when(customerRepository.findByUsername(sameUsername)).thenReturn(Optional.of(existingCustomer)); // Même utilisateur
+        when(customerRepository.findByEmailIgnoreCase(sameEmail)).thenReturn(Optional.of(existingCustomer)); // Même utilisateur
+        when(passwordEncoder.encode(newPassword)).thenReturn(encodedPassword);
+
+        // When updating customer
+        customerService.updateCustomer(userId, sameUsername, sameEmail, newPassword);
+
+        // Then password should be updated but username and email should remain unchanged
+        assertEquals(sameUsername, existingCustomer.getUsername());
+        assertEquals(sameEmail, existingCustomer.getEmail());
+        assertEquals(encodedPassword, existingCustomer.getPassword());
+
+        verify(customerRepository, times(1)).save(existingCustomer);
+        verify(passwordEncoder, times(1)).encode(newPassword);
+
     }
 
 
