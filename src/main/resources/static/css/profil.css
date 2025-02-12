@@ -34,6 +34,10 @@ main h2 {
     outline: none;
 }
 
+.profile-info input[type="number"] {
+    max-width: 150px;
+}
+
 button {
     display: inline-block;
     background-color: #ff9f1c;

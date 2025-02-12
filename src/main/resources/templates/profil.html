@@ -12,23 +12,10 @@
 
 <body th:with="activePage='profil'">
 
-    <!-- Lien d'accès rapide -->
+    <!-- Lien d'acces rapide -->
     <a href="#username" class="skip-link">Aller au champ de saisie</a>
 
-<!--    <header>-->
-
-<!--        <h1>Pay My Buddy</h1>-->
-
-<!--        <nav>-->
-<!--            <a th:href="@{transfert}">Transférer</a>-->
-<!--            <a th:href="@{profil}" class="active">Profil</a>-->
-<!--            <a th:href="@{connection}">Ajouter relation</a>-->
-<!--            <a href="#">Se déconnecter</a>-->
-<!--        </nav>-->
-
-<!--    </header>-->
-
-    <header th:replace="fragments/head.html :: head-fragment"> </header>
+    <header th:replace="~{fragments/head.html :: head-fragment}"> </header>
 
     <main>
 
@@ -56,13 +43,25 @@
             <button type="submit" aria-label="Enregistrez les modifications.">Modifier</button>
         </form>
 
+        <h1>Compte</h1>
+
+        <form th:action="@{/creditBalance}" th:object="${creditBalanceRequest}" method="post" class="profile-info">
+            <div>
+                <label for="balance">Montant à créditer :</label>
+                <input type="number" id="balance" name="balance" placeholder="0" step="0.01" min="0" class="value" required aria-describedby="balanceHelp">
+                <small id="balanceHelp" class="form-text text-muted">Indiquer le montant à ajouter à votre solde.</small>
+            </div>
+
+            <button type="submit" aria-label="Créditer le solde">Créditer</button>
+        </form>
+
         <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
-        <div th:if="${errorMessage}" class="error-message" aria-live="polite">
+        <div th:if="${errorMessage}" class="error-message" aria-live="assertive">
             <p th:text="${errorMessage}"></p>
         </div>
 
         <!-- Section pour afficher les messages d'erreur provenant de la validation -->
-        <div th:if="${errorMessages}" class="error-message" aria-live="polite">
+        <div th:if="${errorMessages}" class="error-message" aria-live="assertive">
             <ul>
                 <li th:each="msg : ${errorMessages}">
                     <span th:text="${msg}"></span>

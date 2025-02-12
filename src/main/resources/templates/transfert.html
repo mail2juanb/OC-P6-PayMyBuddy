@@ -29,7 +29,7 @@
 
 <!--    </header>-->
 
-    <header th:replace="fragments/head.html :: head-fragment"> </header>
+    <header th:replace="~{fragments/head.html :: head-fragment}"> </header>
 
     <main>
 
@@ -42,6 +42,11 @@
         <div th:if="${param.profil}" class="success-message" aria-live="polite">
             Le profil a bien été mis à jour.
         </div>
+
+        <div th:if="${param.balanceSuccess}" class="success-message" aria-live="assertive">
+            <p>Le solde a été crédité avec succès.</p>
+        </div>
+
 
         <!-- Message ajout de transaction -->
         <div th:if="${param.transaction}" class="success-message" aria-live="polite">

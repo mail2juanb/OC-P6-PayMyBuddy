@@ -22,4 +22,6 @@ public interface CustomerService {
 
     void updateCustomer(Long userId, String username, String email, String password);
 
+    void creditBalance(Long userId, BigDecimal amount);
+
 }

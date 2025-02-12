@@ -608,4 +608,69 @@ class CustomerServiceTest {
     }
 
 
+
+    @Test
+    void creditBalance_shouldIncreaseBalance_whenUserExistsAndAmountIsPositive() {
+
+        // Given a user with an initial balance exists in the repository
+        final Long userId = 1L;
+        final BigDecimal initialBalance = new BigDecimal("100.00");
+        final BigDecimal amountToCredit = new BigDecimal("50.00");
+        final Customer customer = new Customer();
+        customer.setId(userId);
+        customer.setBalance(initialBalance);
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(customer));
+
+        // When creditBalance method is called with a positive amount
+        customerService.creditBalance(userId, amountToCredit);
+
+        // Then the customer balance should be increased by the credited amount
+        assertEquals(new BigDecimal("150.00"), customer.getBalance());
+        verify(customerRepository, times(1)).save(customer);
+
+    }
+
+
+
+    @Test
+    void creditBalance_shouldThrowNotFoundCustomerException_whenUserDoesNotExist() {
+
+        // Given no user exists with the specified ID
+        final Long userId = 1L;
+        final BigDecimal amountToCredit = new BigDecimal("50.00");
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // When the creditBalance method is called for a non-existent user
+
+        // Then a NotFoundCustomerException should be thrown
+        assertThrows(NotFoundCustomerException.class, () -> customerService.creditBalance(userId, amountToCredit));
+        verify(customerRepository, never()).save(any(Customer.class));
+
+    }
+
+
+
+    @Test
+    void creditBalance_shouldThrowIllegalArgumentException_whenAmountIsZeroOrNegative() {
+
+        // Given a user exists in the repository
+        final Long userId = 1L;
+        final BigDecimal invalidAmount = new BigDecimal("0.00");
+        final Customer customer = new Customer();
+        customer.setId(userId);
+        customer.setBalance(new BigDecimal("100.00"));
+
+        when(customerRepository.findById(userId)).thenReturn(Optional.of(customer));
+
+        // When the creditBalance method is called with a zero or negative amount
+
+        // Then an IllegalArgumentException should be thrown
+        assertThrows(IllegalArgumentException.class, () -> customerService.creditBalance(userId, invalidAmount));
+        verify(customerRepository, never()).save(any(Customer.class));
+
+    }
+
+
 }

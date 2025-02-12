@@ -1,6 +1,7 @@
 package com.ocP6.PayMyBuddy.controller;
 
 import com.ocP6.PayMyBuddy.configuration.SecurityTools;
+import com.ocP6.PayMyBuddy.dto.CreditBalanceRequest;
 import com.ocP6.PayMyBuddy.dto.ProfilRequest;
 import com.ocP6.PayMyBuddy.service.CustomerService;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+
 
 @Slf4j
 @Controller
@@ -42,6 +44,7 @@ public class ProfilController {
 
         // NOTE : Instancie l'objet pour la requête du formulaire
         model.addAttribute("profilRequest", new ProfilRequest());
+        model.addAttribute("creditBalanceRequest", new CreditBalanceRequest());
 
         return "profil";
     }
@@ -93,5 +96,31 @@ public class ProfilController {
 
     }
 
+
+
+    @PostMapping("/creditBalance")
+    public String creditBalance(@Valid @ModelAttribute("creditBalanceRequest") CreditBalanceRequest request, BindingResult result, Model model) {
+
+        Long userId = SecurityTools.getConnectedUser().getId();
+
+        if(result.hasErrors()){
+            List<String> messages = result.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .toList();
+
+            model.addAttribute("errorMessages", messages);
+            return "profil";
+        }
+
+        try {
+            customerService.creditBalance(userId, request.getBalance());                     // Appel du service pour créditer la balance
+            return "redirect:/transfert?balanceSuccess=true";                               // Redirection avec succès
+        } catch (Exception exception) {
+            log.error("{} Balance credit error : {}", exception.getClass().getSimpleName(), exception.getMessage());
+            model.addAttribute("errorMessage", exception.getMessage());
+            return "profil";                                                                // Retourner à la page de profil avec message d'erreur
+        }
+    }
 
 }

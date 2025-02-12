@@ -149,4 +149,20 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
+
+
+    public void creditBalance(Long userId, BigDecimal amount) {
+
+        Customer customer = customerRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet ID : " + userId));
+
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Le montant doit être positif.");
+        }
+
+        customer.setBalance(customer.getBalance().add(amount));
+        customerRepository.save(customer);
+
+    }
+
 }
