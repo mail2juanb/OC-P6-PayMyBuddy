@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -102,18 +104,32 @@ public class ProfilControllerIntegrationTest {
 
 
 
-    @ParameterizedTest
-    @MethodSource("provideInvalidDatas")
-    @WithUserDetails("user@user.com")
-    void updateProfil_shouldReturnError_withInvalidDatas (String content) throws Exception {
+    // Returns invalid arguments
+    static Stream<Arguments> provideInvalidArguments() {
+        return Stream.of(
+                Arguments.of( "friend", "newEmail@test.com", "newPassword"),
+                Arguments.of( "newUsername", "friend@friend.com", "newPassword"),
+                Arguments.of( " ", "test@test.com", "newPassword"),
+                Arguments.of( "invalid", "", "newPassword"),
+                Arguments.of( "invalid", "test@test.com", ""),
+                Arguments.of( "invalid", "invalid-email", "newPassword")
+        );
+    }
 
-        // Given user data in data.sql
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidArguments")
+    @WithUserDetails("user@user.com")
+    void updateProfil_shouldReturnError_withInvalidArguments (String username, String email, String password) throws Exception {
+
+        // Given a request
+        final String request = "{ \"username\" : \"" + username + "\" , \"email\": \"" +  email + "\" , \"password\": \""+  password +  "\"}";
 
         // When sending a POST request to /profil
         ResultActions response = mockMvc.perform(post("/profil")
                 .with(csrf())
                 .contentType("application/json")
-                .content(content)
+                .content(request)
         );
 
         // Then the response should display an error message and stay on the same page
@@ -123,39 +139,6 @@ public class ProfilControllerIntegrationTest {
                 .andExpect(model().attribute("errorMessages", not(empty())))
                 .andExpect(model().attribute("username", "user"))
                 .andExpect(model().attribute("email", "user@user.com"));
-
-    }
-
-
-
-    // Returns invalid datas
-    static Stream<String> provideInvalidDatas() {
-
-        String content_usernameIsAlreadyTaken = """
-                        {
-                            "username": "friend",
-                            "email": "newEmail@test.com",
-                            "password": "newPassword"
-                        }
-                        """;
-
-        String content_emailIsAlreadyTaken = """
-                        {
-                            "username": "newUsername",
-                            "email": "friend@friend.com",
-                            "password": "newPassword"
-                        }
-                        """;
-
-        String content_fieldsAreInvalid = """
-                        {
-                            "username": " ",
-                            "email": "invalid-email",
-                            "password": ""
-                        }
-                        """;
-
-        return Stream.of(content_usernameIsAlreadyTaken, content_emailIsAlreadyTaken, content_fieldsAreInvalid);
 
     }
 

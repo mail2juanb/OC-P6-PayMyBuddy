@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -104,15 +105,28 @@ public class RegisterControllerIntegrationTest {
 
 
 
+    // Returns invalid arguments
+    static Stream<Arguments> provideInvalidArguments() {
+        return Stream.of(
+                Arguments.of("friend", "newEmail@test.com", "newPassword"),
+                Arguments.of("newUsername", "friend@friend.com", "newPassword"),
+                Arguments.of("  ", "invalid-email", "")
+        );
+
+    }
+
     @ParameterizedTest
-    @MethodSource("provideInvalidDatas")
-    void register_shouldFailRegistration_withInvalidDatas(String content) throws Exception {
+    @MethodSource("provideInvalidArguments")
+    void register_shouldFailRegistration_withInvalidArguments(String username, String email, String password) throws Exception {
+
+        // Given a request
+        final String request = "{ \"username\" : \"" + username + "\" , \"email\": \"" +  email + "\" , \"password\": \""+  password +  "\"}";
 
         // When trying to register with an already taken username
         ResultActions response = mockMvc.perform(post(URI_PATH)
                 .with(csrf())
                 .contentType("application/json")
-                .content(content)
+                .content(request)
         );
 
         // Then an error message should be displayed
@@ -120,39 +134,6 @@ public class RegisterControllerIntegrationTest {
                 .andExpect(view().name("register"))
                 .andExpect(model().attributeExists("errorMessages"))
                 .andExpect(model().attribute("errorMessages", not(empty())));
-
-    }
-
-
-
-    // Returns invalid datas
-    static Stream<String> provideInvalidDatas() {
-
-        String content_usernameIsAlreadyTaken = """
-                        {
-                            "username": "friend",
-                            "email": "newEmail@test.com",
-                            "password": "newPassword"
-                        }
-                        """;
-
-        String content_emailIsAlreadyTaken = """
-                        {
-                            "username": "newUsername",
-                            "email": "friend@friend.com",
-                            "password": "newPassword"
-                        }
-                        """;
-
-        String content_fieldsAreInvalid = """
-                        {
-                            "username": " ",
-                            "email": "invalid-email",
-                            "password": ""
-                        }
-                        """;
-
-        return Stream.of(content_usernameIsAlreadyTaken, content_emailIsAlreadyTaken, content_fieldsAreInvalid);
 
     }
 

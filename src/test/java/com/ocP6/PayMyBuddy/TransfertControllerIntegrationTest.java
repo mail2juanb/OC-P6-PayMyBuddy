@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -175,18 +176,30 @@ public class TransfertControllerIntegrationTest {
 
 
 
+    // Returns invalid arguments
+    static Stream<Arguments> provideInvalidArguments() {
+        return Stream.of(
+                Arguments.of( 2L, "Montant négatif", BigDecimal.valueOf(-50)),
+                Arguments.of( 4L, "Connexion invalide", BigDecimal.valueOf(20)),
+                Arguments.of( 1L, "Self-transfer", BigDecimal.valueOf(100)),
+                Arguments.of( 2L, "Excessive transfer", BigDecimal.valueOf(10000000)),
+                Arguments.of( 4L, "Unconnected transfer", BigDecimal.valueOf(50))
+        );
+    }
+
     @ParameterizedTest
-    @MethodSource("provideInvalidDatas")
+    @MethodSource("provideInvalidArguments")
     @WithUserDetails("user@user.com")
-    void transfert_shouldFail_withInvalidDatas (String content) throws Exception {
+    void transfert_shouldFail_withInvalidArguments (Long relationId, String description, BigDecimal amount) throws Exception {
 
-        // Given uriPath
+        // Given a request
+        final String request = "{ \"relationId\" : \"" + relationId + "\" , \"description\": \"" +  description + "\" , \"amount\": \""+  amount +  "\"}";
 
-        // When user tries to send a negative amount
+        // When user tries to send transaction
         ResultActions response = mockMvc.perform(post(URI_PATH)
                 .with(csrf())
                 .contentType("application/json")
-                .content(content)
+                .content(request)
         );
 
         // Then the transfer is refused and an error message is displayed
@@ -196,171 +209,5 @@ public class TransfertControllerIntegrationTest {
                 .andExpect(model().attribute("errorMessages", not(empty())));
 
     }
-
-
-    // Returns invalid datas
-    static Stream<String> provideInvalidDatas() {
-
-        String content_balanceIsTooLow = """
-                        {
-                            "relationId": 2,
-                            "description": "Montant négatif",
-                            "amount": -50
-                        }
-                        """;
-
-        String content_receiverIsNotInConnections = """
-                        {
-                            "relationId": 4,
-                            "description": "Connexion invalide",
-                            "amount": 20
-                        }
-                        """;
-
-        String content_userTransfersToSelf = """
-                        {
-                            "relationId": 1,
-                            "description": "Self-transfer",
-                            "amount": 100
-                        }
-                        """;
-
-        String content_userTransfersMoreThanBalance = """
-                        {
-                            "relationId": 2,
-                            "description": "Excessive transfer",
-                            "amount": 1000000
-                        }
-                        """;
-
-        String content_userTransfersToNonFriend = """
-                        {
-                            "relationId": 4,
-                            "description": "Unconnected transfer",
-                            "amount": 50
-                        }
-                        """;
-
-        return Stream.of(content_balanceIsTooLow, content_receiverIsNotInConnections, content_userTransfersToSelf,
-                content_userTransfersMoreThanBalance, content_userTransfersToNonFriend);
-
-    }
-
-
-
-
-
-
-
-// TODO : A supprimer si le test paramétré est valide
-
-//    @Test
-//    @WithUserDetails("user@user.com")
-//    void transfert_shouldFail_whenAmountIsNegative() throws Exception {
-//
-//        // Given uriPath
-//
-//        // When user tries to send a negative amount
-//        ResultActions response = mockMvc.perform(post(URI_PATH)
-//                .with(csrf())
-//                .param("relationId", "2")
-//                .param("description", "Montant négatif")
-//                .param("amount", "-50")
-//        );
-//
-//        // Then the transfer is refused and an error message is displayed
-//        response.andExpect(status().isOk())
-//                .andExpect(view().name("transfert"))
-//                .andExpect(model().attributeExists("errorMessages"))
-//                .andExpect(model().attribute("errorMessages", not(empty())));
-//
-//    }
-
-
-
-//    @Test
-//    @WithUserDetails("user@user.com")
-//    void transfert_shouldFail_whenReceiverIsNotInConnections() throws Exception {
-//
-//        // Given uriPath
-//
-//        // When the user is trying to send a transfer to an offline user (ID=4)
-//        ResultActions response = mockMvc.perform(post(URI_PATH)
-//                .with(csrf())
-//                .param("relationId", "4")
-//                .param("description", "Test connexion invalide")
-//                .param("amount", "20")
-//        );
-//
-//        // Then the transfer is refused and an error message is displayed
-//        response.andExpect(status().isOk())
-//                .andExpect(view().name("transfert"))
-//                .andExpect(model().attributeExists("errorMessage"))
-//                .andExpect(model().attribute("errorMessage", not(empty())));
-//
-//    }
-
-
-
-//    @Test
-//    @WithUserDetails("user@user.com")
-//    void transfert_shouldFail_whenUserTransfersToSelf() throws Exception {
-//
-//        // Given uriPath
-//
-//        // Given transfer request where user sends money to themselves
-//        ResultActions response = mockMvc.perform(post(URI_PATH)
-//                .param("relationId", "1")
-//                .param("description", "Test self-transfer")
-//                .param("amount", "100")
-//                .with(csrf()));
-//
-//        // Then: Check error message is displayed in the view
-//        response.andExpect(status().isOk())
-//                .andExpect(view().name("transfert"))
-//                .andExpect(model().attributeExists("errorMessage"));
-//    }
-
-
-
-
-//    @Test
-//    @WithUserDetails("user@user.com")
-//    void transfert_shouldFail_whenUserTransfersMoreThanBalance() throws Exception {
-//
-//        // Given: Transfer request where amount exceeds user balance
-//        ResultActions response = mockMvc.perform(post(URI_PATH)
-//                .param("relationId", "2")
-//                .param("description", "Test excessive transfer")
-//                .param("amount", "10000")
-//                .with(csrf()));
-//
-//        // Then: Check error message is displayed in the view
-//        response.andExpect(status().isOk())
-//                .andExpect(view().name("transfert"))
-//                .andExpect(model().attributeExists("errorMessage"))
-//                .andExpect(model().attribute("errorMessage", "Le montant à transférer est supérieur à votre solde disponible."));
-//    }
-
-
-
-//    @Test
-//    @WithUserDetails("user@user.com")
-//    void transfert_shouldFail_whenUserTransfersToNonFriend() throws Exception {
-//
-//        // Given: Transfer request to a user not in connections
-//        ResultActions response = mockMvc.perform(post(URI_PATH)
-//                .param("relationId", "4")
-//                .param("description", "Test unconnected transfer")
-//                .param("amount", "50")
-//                .with(csrf()));
-//
-//        // Then: Check error message is displayed in the view
-//        response.andExpect(status().isOk())
-//                .andExpect(view().name("transfert"))
-//                .andExpect(model().attributeExists("errorMessage"))
-//                .andExpect(model().attribute("errorMessage", "Vous n'êtes pas en relation avec cet utilisateur."));
-//    }
-
 
 }
