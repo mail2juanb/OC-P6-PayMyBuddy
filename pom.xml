@@ -127,71 +127,6 @@
 			<version>3.0.0</version>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>jakarta.inject</groupId>-->
-<!--			<artifactId>jakarta.inject-api</artifactId>-->
-<!--&lt;!&ndash;			<version>2.0.1</version>&ndash;&gt;-->
-<!--		</dependency>-->
-
-<!--		<dependency>-->
-<!--			<groupId>jakarta.servlet</groupId>-->
-<!--			<artifactId>jakarta.servlet-api</artifactId>-->
-<!--&lt;!&ndash;			<version>6.1.0</version>&ndash;&gt;-->
-<!--			<scope>provided</scope>-->
-<!--		</dependency>-->
-
-<!--		<dependency>-->
-<!--			<groupId>jakarta.persistence</groupId>-->
-<!--			<artifactId>jakarta.persistence-api</artifactId>-->
-<!--&lt;!&ndash;			<version>3.2.0</version>&ndash;&gt;-->
-<!--		</dependency>-->
-
-<!--		<dependency>-->
-<!--			<groupId>jakarta.validation</groupId>-->
-<!--			<artifactId>jakarta.validation-api</artifactId>-->
-<!--&lt;!&ndash;			<version>3.1.1</version>&ndash;&gt;-->
-<!--		</dependency>-->
-
-
-
-
-
-		<!--	Fixing vulnerabilities-->
-		<!--	maven:org.apache.tomcat.embed:tomcat-embed-core:10.1.31 is vulnerable-->
-<!--		<dependency>-->
-<!--			<groupId>org.apache.tomcat.embed</groupId>-->
-<!--			<artifactId>tomcat-embed-core</artifactId>-->
-<!--			<version>11.0.2</version>-->
-<!--		</dependency>-->
-
-<!--		&lt;!&ndash;	maven:org.xmlunit:xmlunit-core:2.9.1 is vulnerable&ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>org.xmlunit</groupId>-->
-<!--			<artifactId>xmlunit-core</artifactId>-->
-<!--			<version>2.10.0</version>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
-
-		<!--	maven:ch.qos.logback:logback-core:1.5.11 is vulnerable si je le mets, ça casse mes tests-->
-<!--		<dependency>-->
-<!--			<groupId>ch.qos.logback</groupId>-->
-<!--			<artifactId>logback-core</artifactId>-->
-<!--			<version>1.5.16</version>-->
-<!--		</dependency>-->
-
-		<!--	maven:net.minidev:json-smart:2.5.1 is vulnerable-->
-<!--		<dependency>-->
-<!--			<groupId>net.minidev</groupId>-->
-<!--			<artifactId>json-smart</artifactId>-->
-<!--			<version>2.4.11</version>-->
-<!--		</dependency>-->
-
-		<!--	maven:org.springframework.security:spring-security-core:6.3.4 is vulnerable-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.security</groupId>-->
-<!--			<artifactId>spring-security-core</artifactId>-->
-<!--			<version>6.3.5</version>-->
-<!--		</dependency>-->
 	</dependencies>
 
 	<build>
@@ -229,6 +164,7 @@
 						</goals>
 						<configuration>
 							<excludes>
+								<exclude>com/ocP6/PayMyBuddy/model/**</exclude>
 								<exclude>com/ocP6/PayMyBuddy/exception/**</exclude>
 								<exclude>com/ocP6/PayMyBuddy/PayMyBuddyApplication*</exclude>
 							</excludes>
