@@ -260,7 +260,7 @@ class CustomerServiceTest {
         when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
         when(customerRepository.findByEmailIgnoreCase(customer.getEmail())).thenReturn(Optional.of(customer));
 
-        // When try to add connection // Then throw ConflictException
+        // When try to add connection // Then throw ConflictYourselfException
         assertThrows(ConflictYourselfException.class, () -> customerService.addConnection(customer.getId(), customer.getEmail()));
 
     }
@@ -286,7 +286,7 @@ class CustomerServiceTest {
         when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
         when(customerRepository.findByEmailIgnoreCase(friend.getEmail())).thenReturn(Optional.of(friend));
 
-        // When try to add connection // Then throw ConflictException
+        // When try to add connection // Then throw ConflictConnectionException
         assertThrows(ConflictConnectionException.class, () -> customerService.addConnection(customer.getId(), friend.getEmail()));
 
     }
