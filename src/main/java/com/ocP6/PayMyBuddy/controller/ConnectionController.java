@@ -24,6 +24,14 @@ public class ConnectionController {
     private final CustomerService customerService;
 
 
+    /**
+     * GET /connection
+     * This URL renders the connection page where the user can request to add a new connection.
+     * It prepares a blank ConnectionRequest object for the form submission.
+     *
+     * @param model The model object used to pass data to the view.
+     * @return String "connection" (the name of the connection view to render).
+     */
 
     @GetMapping("/connection")
     public String connection(Model model) {
@@ -35,6 +43,21 @@ public class ConnectionController {
     }
 
 
+
+    /**
+     * POST /connection
+     * This URL processes the connection form submission by validating the user's input.
+     * It performs the following actions:
+     * - If validation fails, it reloads the page with error messages and the entered connection details.
+     * - If validation passes, it attempts to add a new connection for the logged-in customer.
+     * - If successful, the user is redirected to the transfert page.
+     * - If an exception occurs during the connection process, the error message is displayed on the page.
+     *
+     * @param request The connection request containing the connection details (validated with @Valid).
+     * @param result The binding result used to check if there were validation errors.
+     * @param model The model object used to pass data to the view.
+     * @return String "connection" (the name of the view to render) or a redirect to the transfert page in case of success.
+     */
 
     @PostMapping("/connection")
     public String addConnection(@Valid @ModelAttribute("connectionRequest") ConnectionRequest request, BindingResult result, Model model) {

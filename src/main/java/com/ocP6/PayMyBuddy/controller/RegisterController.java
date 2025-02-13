@@ -23,6 +23,14 @@ public class RegisterController {
     private final CustomerService customerService;
 
 
+    /**
+     * GET /register
+     * This URL serves the registration form to the user.
+     * It initializes a new RegisterRequest object and sends it to the view to render the registration form.
+     *
+     * @param model The model object used to pass data to the view.
+     * @return String "register" (the name of the view to render).
+     */
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -33,6 +41,22 @@ public class RegisterController {
         return "register";
     }
 
+
+
+    /**
+     * POST /register
+     * This URL processes the registration form submission by validating the input data.
+     * It performs the following actions:
+     * - If validation fails, it reloads the registration page with error messages.
+     * - If validation passes, it attempts to create a new customer in the system with the provided details.
+     * - If successful, the user is redirected to the login page with a success message.
+     * - If an error occurs during customer creation, the error message is displayed on the registration page.
+     *
+     * @param request The registration request containing the user details (validated with @Valid).
+     * @param result The binding result used to check if there were validation errors.
+     * @param model The model object used to pass data to the view.
+     * @return String "register" (the name of the view to render) or a redirect to the login page in case of success.
+     */
 
     @PostMapping("/register")
     public String registerCustomer(@Valid @ModelAttribute("registerRequest") RegisterRequest request, BindingResult result, Model model) {
