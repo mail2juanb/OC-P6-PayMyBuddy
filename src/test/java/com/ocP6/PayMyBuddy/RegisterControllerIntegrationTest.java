@@ -137,4 +137,29 @@ public class RegisterControllerIntegrationTest {
 
     }
 
+
+
+    @Test
+    void register_shouldFailRegistration_whenDatabaseConstraintFails() throws Exception {
+
+        // Given a request that will trigger a database constraint violation (email already in use)
+        RegisterRequest request = new RegisterRequest("existingUser", "existing@example.com", "password123");
+
+        // Insert an existing user
+        customerService.createCustomer("existingUser", "existing@example.com", "password123");
+
+        // When attempting to register a new user with the same email
+        ResultActions response = mockMvc.perform(post(URI_PATH)
+                .param("username", request.getUsername())
+                .param("email", request.getEmail())
+                .param("password", request.getPassword()));
+
+        // Then the user should stay on the registration page with an error message
+        response.andExpect(status().isOk())
+                .andExpect(view().name("register"))
+                .andExpect(model().attributeExists("errorMessage"))
+                .andExpect(model().attribute("errorMessage", not(empty())));
+    }
+
+
 }

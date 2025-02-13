@@ -149,6 +149,32 @@ public class ProfilControllerIntegrationTest {
 
     @Test
     @WithUserDetails("user@user.com")
+    void updateProfil_shouldReturnProfilView_whenUpdateFails() throws Exception {
+
+        // Given: An email that already exists in the database
+        customerService.createCustomer("anotherUser", "existing@email.com", "password123");
+
+        ProfilRequest request = new ProfilRequest("validUsername", "existing@email.com", "validPassword");
+
+        // When: Sending a POST request to /profil with a duplicate email
+        ResultActions response = mockMvc.perform(post(URI_PATH)
+                .with(csrf())
+                .param("username", request.getUsername())
+                .param("email", request.getEmail())
+                .param("password", request.getPassword()));
+
+        // Then: The response should return the "profil" view with an error message
+        response.andExpect(status().isOk())
+                .andExpect(view().name("profil"))
+                .andExpect(model().attributeExists("errorMessage"))
+                .andExpect(model().attribute("errorMessage", not(empty())));
+
+    }
+
+
+
+    @Test
+    @WithUserDetails("user@user.com")
     void creditBalance_shouldRedirectToTransfert_whenCreditIsSuccessful() throws Exception {
 
         // Given user data in data.sql
