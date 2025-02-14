@@ -31,12 +31,12 @@
         </form>
 
         <!-- Message de confirmation d'inscription -->
-        <div th:if="${param.success}" class="success-message" aria-live="polite">
+        <div th:if="${param.success}" class="success-message" aria-live="assertive">
             Inscription effectuée avec succès.
         </div>
 
         <!-- Message d'erreur d'input au login -->
-        <div th:if="${param.error}" class="error-message" aria-live="polite">
+        <div th:if="${param.error}" class="error-message" aria-live="assertive">
             Mauvais password ou username.
         </div>
 
@@ -47,7 +47,7 @@
         </div>
 
         <!-- Message de logout -->
-        <div th:if="${param.logout}" class="success-message" aria-live="polite">
+        <div th:if="${param.logout}" class="success-message" aria-live="assertive">
             Vous avez été déconnecté avec succès.
         </div>
     </main>
