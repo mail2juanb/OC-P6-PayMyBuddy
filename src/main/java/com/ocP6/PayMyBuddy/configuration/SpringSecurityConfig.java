@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-//@EnableWebSecurity Apparemment pas utile de le préciser --
 @RequiredArgsConstructor
 public class SpringSecurityConfig {
 
@@ -28,40 +27,32 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                // CSRF configuration (reactivated to protect sensitive transactions)
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/css/**", "/login", "/register"))
-                //.csrf(AbstractHttpConfigurer::disable)
 
-                // Authorisation management
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PERMIT_ALL).permitAll()                    // Autoriser les endpoints publics
-                        .anyRequest().authenticated()                               // Requiert une authentification pour le reste
+                        .requestMatchers(PERMIT_ALL).permitAll()
+                        .anyRequest().authenticated()
                 )
-                // Authentication configuration
-                .userDetailsService(customUserDetailsService)                   // Service pour charger les utilisateurs
+                .userDetailsService(customUserDetailsService)
                 .formLogin(form -> form
-                        .loginPage("/login")                                    // Page de connexion personnalisée
-                        .usernameParameter("email")                             // Paramètre pour l'email
-                        .passwordParameter("password")                          // Paramètre pour le mot de passe
-                        .defaultSuccessUrl("/transfert")                        // Rediriger après authentification réussie
-                        .failureUrl("/login?error=true")     // Rediriger après échec
-                        .permitAll()                                            // Accessible à tous
+                        .loginPage("/login")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/transfert")
+                        .failureUrl("/login?error=true")
+                        .permitAll()
                 )
-                // logout configuration
                 .logout(logout -> logout
-                        .logoutUrl("/logout")                                   // URL pour la déconnexion
-                        .logoutSuccessUrl("/login?logout=true")                 // Redirection après déconnexion
-                        .deleteCookies("JSESSIONID")         // Supprime le cookie de session
-                        .invalidateHttpSession(true)                            // Invalide la session actuelle
-                        .permitAll()                                            // Accessible à tous
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
+                        .permitAll()
                 )
-                // Exceptions configuration
                 .exceptionHandling(Customizer.withDefaults()
                 )
-                // Session configuration
                 .sessionManagement(session -> session
-                        .maximumSessions(1)                         // Limite à une session par utilisateur
-                        //.maxSessionsPreventsLogin(true)             // Bloque la connexion si une session existe déjà - Génère une erreur à la reconnection
+                        .maximumSessions(1)
                 )
                 .build();
     }

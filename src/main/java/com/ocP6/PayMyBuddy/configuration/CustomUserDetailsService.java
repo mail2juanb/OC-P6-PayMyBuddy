@@ -24,8 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Customer customer = customerRepository.findByEmailIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Customer not found with email : " + username));
 
-        //return new User(customer.getUsername(), customer.getPassword(),new ArrayList<>());                            // Aucune autorité spécifique, tous les utilisateurs ont le même accès
-        return new CustomUserDetails(customer);                                                                         // Aucune autorité spécifique, tous les utilisateurs ont le même accès
+        return new CustomUserDetails(customer);
     }
 
 }
