@@ -11,9 +11,9 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor                  // Génère un constructeur sans arguments
-@AllArgsConstructor                 // Génère un constructeur avec tous les arguments
-@Builder                            // Permet d'ajouter des constructeurs personalisés
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Customer {
 
     @Id
@@ -37,27 +37,24 @@ public class Customer {
     private BigDecimal balance = BigDecimal.ZERO;
 
 
-    // Relation avec les transactions en tant que Sender
     @OneToMany(mappedBy = "sender")
     private List<Transaction> sentTransactions = new ArrayList<>();
 
 
-    // Relation avec les transactions en tant que Receiver
     @OneToMany(mappedBy = "receiver")
     private List<Transaction> receivedTransactions = new ArrayList<>();
 
 
-    // Relation many-to-many avec d'autres users via la table Connections. Spring s'en occupe tout seul
     @ManyToMany
     @JoinTable(
-            name = "users_connections",                                                         // Nom réel de la table intermédiaire
-            joinColumns = @JoinColumn(name = "user_id"),                                        // Nom réel de la colonne
-            inverseJoinColumns = @JoinColumn(name = "connections_id")                           // Nom réel de l'autre colonne
+            name = "users_connections",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "connections_id")
     )
     private List<Customer> connections = new ArrayList<>();
 
 
-    // Constructeur pour l'ajout d'un nouveau Customer dans la BDD
+
     public Customer(String username, String email, String password){
         this.username = username;
         this.email = email;

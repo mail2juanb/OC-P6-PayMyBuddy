@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Table(name = "transactions")
 @Getter
 @Setter
-@NoArgsConstructor                  // Génère un constructeur sans arguments
+@NoArgsConstructor
 public class Transaction {
 
     @Id
@@ -39,7 +39,6 @@ public class Transaction {
     private BigDecimal amount;
 
 
-    // Constructeur pour l'ajout d'une nouvelle Transaction dans la BDD
     public Transaction(Customer sender, Customer receiver, String description, BigDecimal amount) {
         this.sender = sender;
         this.receiver = receiver;
