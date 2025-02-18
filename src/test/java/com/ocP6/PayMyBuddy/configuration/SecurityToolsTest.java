@@ -1,10 +1,8 @@
-package com.ocP6.PayMyBuddy;
+package com.ocP6.PayMyBuddy.configuration;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.ocP6.PayMyBuddy.configuration.CustomUserDetails;
-import com.ocP6.PayMyBuddy.configuration.SecurityTools;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

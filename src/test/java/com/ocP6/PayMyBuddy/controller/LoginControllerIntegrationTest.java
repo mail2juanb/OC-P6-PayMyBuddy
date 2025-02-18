@@ -1,4 +1,4 @@
-package com.ocP6.PayMyBuddy;
+package com.ocP6.PayMyBuddy.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

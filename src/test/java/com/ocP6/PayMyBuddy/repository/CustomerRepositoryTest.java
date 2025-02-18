@@ -1,7 +1,6 @@
-package com.ocP6.PayMyBuddy;
+package com.ocP6.PayMyBuddy.repository;
 
 import com.ocP6.PayMyBuddy.model.Customer;
-import com.ocP6.PayMyBuddy.repository.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

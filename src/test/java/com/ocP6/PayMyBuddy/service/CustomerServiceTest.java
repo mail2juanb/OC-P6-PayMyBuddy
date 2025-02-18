@@ -1,9 +1,8 @@
-package com.ocP6.PayMyBuddy;
+package com.ocP6.PayMyBuddy.service;
 
 import com.ocP6.PayMyBuddy.exception.*;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
-import com.ocP6.PayMyBuddy.service.CustomerServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

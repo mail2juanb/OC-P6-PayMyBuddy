@@ -1,4 +1,4 @@
-package com.ocP6.PayMyBuddy;
+package com.ocP6.PayMyBuddy.controller;
 
 
 import com.ocP6.PayMyBuddy.service.CustomerServiceImpl;

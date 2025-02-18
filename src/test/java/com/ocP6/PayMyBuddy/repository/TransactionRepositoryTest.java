@@ -1,9 +1,7 @@
-package com.ocP6.PayMyBuddy;
+package com.ocP6.PayMyBuddy.repository;
 
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.model.Transaction;
-import com.ocP6.PayMyBuddy.repository.CustomerRepository;
-import com.ocP6.PayMyBuddy.repository.TransactionRepository;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;

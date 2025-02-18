@@ -1,11 +1,10 @@
-package com.ocP6.PayMyBuddy;
+package com.ocP6.PayMyBuddy.service;
 
 import com.ocP6.PayMyBuddy.exception.*;
 import com.ocP6.PayMyBuddy.model.Customer;
 import com.ocP6.PayMyBuddy.model.Transaction;
 import com.ocP6.PayMyBuddy.repository.CustomerRepository;
 import com.ocP6.PayMyBuddy.repository.TransactionRepository;
-import com.ocP6.PayMyBuddy.service.TransactionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
