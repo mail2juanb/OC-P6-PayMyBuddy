@@ -5,13 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page d'inscription - Pay My Buddy</title>
-    <!--    <link rel="stylesheet" href="/css/register.css">-->
     <link th:href="@{/css/shared-login.css}" rel="stylesheet">
     <link th:href="@{/css/register.css}" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Lien d'accès rapide -->
+
     <a href="#username" class="skip-link">Aller au champ de saisie</a>
 
     <main>
@@ -40,12 +39,10 @@
             <button type="submit" aria-label="Enregistrer votre profil pour utiliser l'application">S'inscrire</button>
         </form>
 
-        <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
         <div th:if="${errorMessage}" class="error-message" aria-live="assertive">
             <p th:text="${errorMessage}"></p>
         </div>
 
-        <!-- Section pour afficher les messages d'erreur provenant de la validation -->
         <div th:if="${errorMessages}" class="error-message" aria-live="assertive">
             <ul>
                 <li th:each="msg : ${errorMessages}">

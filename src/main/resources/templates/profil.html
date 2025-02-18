@@ -5,14 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de Profil - Pay My Buddy</title>
-<!--    <link rel="stylesheet" href="/css/profil.css">-->
     <link th:href="@{/css/shared-production.css}" rel="stylesheet">
     <link th:href="@{/css/profil.css}" rel="stylesheet">
 </head>
 
 <body th:with="activePage='profil'">
 
-    <!-- Lien d'acces rapide -->
     <a href="#username" class="skip-link">Aller au champ de saisie</a>
 
     <header th:replace="~{fragments/head.html :: head-fragment}"> </header>
@@ -55,12 +53,10 @@
             <button type="submit" aria-label="Créditer le solde">Créditer</button>
         </form>
 
-        <!-- Section pour afficher les messages d'erreur provenant des méthodes -->
         <div th:if="${errorMessage}" class="error-message" aria-live="assertive">
             <p th:text="${errorMessage}"></p>
         </div>
 
-        <!-- Section pour afficher les messages d'erreur provenant de la validation -->
         <div th:if="${errorMessages}" class="error-message" aria-live="assertive">
             <ul>
                 <li th:each="msg : ${errorMessages}">
