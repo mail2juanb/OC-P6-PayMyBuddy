@@ -34,7 +34,7 @@ public class SecurityToolsTest {
         // Given a valid authentication with a CustomUserDetails object
         Authentication authentication = new UsernamePasswordAuthenticationToken(customUserDetails, null, List.of());
 
-        // When: The security context is mocked to return the authentication, and we call getConnectedUser
+        // When the security context is mocked to return the authentication, and we call getConnectedUser
         try (var securityContextHolderMockedStatic = mockStatic(SecurityContextHolder.class)) {
             when(securityContext.getAuthentication()).thenReturn(authentication);
             securityContextHolderMockedStatic.when(SecurityContextHolder::getContext).thenReturn(securityContext);
@@ -67,17 +67,35 @@ public class SecurityToolsTest {
 
 
     @Test
-    void getConnectedUser_shouldThrowException_whenPrincipalIsNotCustomUserDetails() {
+    void getConnectedUser_shouldThrowException_whenAuthenticationIsNotAuthenticated() {
 
-        // Given a valid authentication, but the principal is not a CustomUserDetails instance
-        Authentication authentication = new UsernamePasswordAuthenticationToken("notAUserDetails", null);
+        // Given the security context returns an unauthenticated authentication
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.isAuthenticated()).thenReturn(false);
 
-        // When the security context is mocked to return this authentication, and we call getConnectedUser
-        try (MockedStatic<SecurityContextHolder> securityContextHolderMockedStatic = mockStatic(SecurityContextHolder.class)) {
+        try (var securityContextHolderMockedStatic = mockStatic(SecurityContextHolder.class)) {
             when(securityContext.getAuthentication()).thenReturn(authentication);
             securityContextHolderMockedStatic.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            // Then a BadCredentialsException should be thrown because the principal is not of type CustomUserDetails
+            // When // Then calling getConnectedUser should throw BadCredentialsException
+            assertThrows(BadCredentialsException.class, SecurityTools::getConnectedUser);
+        }
+
+    }
+
+
+
+    @Test
+    void getConnectedUser_shouldThrowException_whenPrincipalIsNotCustomUserDetails() {
+
+        // Given the security context returns an authentication with a non-CustomUserDetails principal
+        Authentication authentication = new UsernamePasswordAuthenticationToken("invalidPrincipal", null, List.of());
+
+        try (var securityContextHolderMockedStatic = mockStatic(SecurityContextHolder.class)) {
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            securityContextHolderMockedStatic.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+            // When // Then calling getConnectedUser should throw BadCredentialsException
             assertThrows(BadCredentialsException.class, SecurityTools::getConnectedUser);
         }
 
