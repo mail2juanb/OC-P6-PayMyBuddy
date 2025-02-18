@@ -26,12 +26,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     public void createCustomer(String username, String email, String password) {
 
-        // NOTE : Si le username existe déjà dans la bdd alors, on lève une exception
         if (customerRepository.findByUsername(username).isPresent()) {
             throw new AlreadyTakenUsernameException("Le nom d'utilisateur est déjà utilisé, veuillez en choisir un autre");
         }
 
-        // NOTE : Si l'email existe déjà dans la bdd alors, on lève une Exception
         if (customerRepository.findByEmailIgnoreCase(email).isPresent()) {
             throw new AlreadyTakenEmailException("L'email est déjà utilisé, veuillez en choisir un autre");
         }
@@ -57,29 +55,23 @@ public class CustomerServiceImpl implements CustomerService {
 
     public void addConnection(Long customerId, String email) {
 
-        // NOTE: Récupère le customer correspondant à l'id.
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet ID : " + customerId));
 
-        // NOTE: Vérifier si l'email existe.
         Customer addCustomer = customerRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet email : " + email));
 
-        // NOTE: Récupère l'id correspondant à l'email
         Long addCustomerId = addCustomer.getId();
 
-        // NOTE: Vérifie que ce n'est pas le même customer.
         if (addCustomerId.equals(customerId)) {
             throw new ConflictYourselfException("Vous ne pouvez être en relation avec vous même !");
         }
 
-        // NOTE: Vérifier que les 2 Customer ne sont pas déjà amis
         List<Customer> connections = customer.getConnections();
         if (connections.stream().anyMatch(c -> c.getId().equals(addCustomerId))) {
             throw new ConflictConnectionException("Vous êtes déjà en relation avec cet utilisateur : " + email);
         }
 
-        // NOTE: Ajouter la relation entre eux
         customer.getConnections().add(addCustomer);
         customerRepository.save(customer);
         addCustomer.getConnections().add(customer);
@@ -121,30 +113,25 @@ public class CustomerServiceImpl implements CustomerService {
 
     public void updateCustomer(Long userId, String usernameRequest, String emailRequest, String passwordRequest) {
 
-        // NOTE : Récupérer le Customer original
         Customer customer = customerRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundCustomerException("L'utilisateur est introuvable avec cet ID : " + userId));
 
-        // NOTE : Vérifier que le username de la request n'est pas déjà utilisé par un autre customer
         customerRepository.findByUsername(usernameRequest).ifPresent(foundCustomer -> {
             if (!foundCustomer.getId().equals(userId)) {
                 throw new AlreadyTakenUsernameException("Ce nom d'utilisateur est déjà utilisé. Veuillez en choisir un autre.");
             }
         });
 
-        // NOTE : Vérifier que l'email de la request n'est pas utilisé par un autre customer
         customerRepository.findByEmailIgnoreCase(emailRequest).ifPresent(existingCustomer -> {
             if (!existingCustomer.getId().equals(userId)) {
                 throw new AlreadyTakenEmailException("Cet email est déjà utilisé. Veuillez en choisir un autre.");
             }
         });
 
-        // NOTE : Mettre à jour les informations
         customer.setUsername(usernameRequest);
         customer.setEmail(emailRequest);
         customer.setPassword(passwordEncoder.encode(passwordRequest));
 
-        // NOTE : Sauvegarder les modifications
         customerRepository.save(customer);
 
     }
