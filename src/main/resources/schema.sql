@@ -1,38 +1,31 @@
----- Creation de la Database
---CREATE DATABASE IF NOT EXISTS testdb;
---USE testdb;
-
 DROP TABLE IF EXISTS users_connections;
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS users;
 
--- Creation de la table User
 CREATE TABLE IF NOT EXISTS users (
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY,                          -- Identifiant unique avec auto-incrementation
-    username    VARCHAR(100) NOT NULL UNIQUE,                               -- Nom d'utilisateur unique et non nul
-    email       VARCHAR(100) NOT NULL UNIQUE,                               -- Adresse e-mail unique et non nulle
-    password    VARCHAR(255) NOT NULL,                                      -- Mot de passe (hache) non nul
-    balance     DECIMAL(38, 2) NOT NULL CHECK (balance >= 0)                -- Balance financiere, doit etre positif
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username    VARCHAR(100) NOT NULL UNIQUE,
+    email       VARCHAR(100) NOT NULL UNIQUE,
+    password    VARCHAR(255) NOT NULL,
+    balance     DECIMAL(38, 2) NOT NULL CHECK (balance >= 0)
 );
 
--- Creation de la table Transaction
 CREATE TABLE IF NOT EXISTS transactions (
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY,        -- Identifiant unique avec auto-incrementation
-    sender      BIGINT NOT NULL,                                     -- Identifiant de l'expediteur, cle etrangere
-    receiver    BIGINT NOT NULL,                                     -- Identifiant du destinataire, cle etrangere
-    description VARCHAR(255),                                        -- Description de la transaction
-    amount      DECIMAL(38, 2) NOT NULL CHECK (amount > 0),          -- Montant de la transaction, doit etre positif
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    sender      BIGINT NOT NULL,
+    receiver    BIGINT NOT NULL,
+    description VARCHAR(255),
+    amount      DECIMAL(38, 2) NOT NULL CHECK (amount > 0),
 
-    FOREIGN KEY (sender) REFERENCES Users(id),           -- Contrainte de cle etrangere vers la table Users pour le champ sender
-    FOREIGN KEY (receiver) REFERENCES Users(id)          -- Contrainte de cle etrangere vers la table Users pour le champ receiver
+    FOREIGN KEY (sender) REFERENCES Users(id),
+    FOREIGN KEY (receiver) REFERENCES Users(id)
 );
 
--- Creation de la table users_connections
 CREATE TABLE IF NOT EXISTS users_connections (
-    user_id             BIGINT NOT NULL,                           -- Identifiant de l'utilisateur, cle etrangere
-    connections_id      BIGINT NOT NULL,                           -- Identifiant de l'ami, cle etrangere
+    user_id             BIGINT NOT NULL,
+    connections_id      BIGINT NOT NULL,
 
-    PRIMARY KEY (user_id, connections_id),                      -- Cle primaire composite pour eviter les doublons d'amitie
-    FOREIGN KEY (user_id) REFERENCES Users(id),                 -- Cle etrangere vers la table Users pour le champ user_id
-    FOREIGN KEY (connections_id) REFERENCES Users(id)          -- Cle etrangere vers la table Users pour le champ friend_id
+    PRIMARY KEY (user_id, connections_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (connections_id) REFERENCES Users(id)
 );
