@@ -42,20 +42,12 @@ public class ProfilController {
     @GetMapping("/profil")
     public String profil(Model model) {
 
-        // NOTE : Récupère l'id de l'utilisateur connecté
         Long userId = SecurityTools.getConnectedUser().getId();
-
-        // NOTE : Demande au service de renvoyer le username du customer concerné
         String username = customerService.getUsernameById(userId);
-
-        // NOTE : Demande au service de renvoyer l'email du customer concerné
         String email = customerService.getEmailById(userId);
 
-        // NOTE : Envoi vers la vue
         model.addAttribute("username", username);
         model.addAttribute("email", email);
-
-        // NOTE : Instancie l'objet pour la requête du formulaire
         model.addAttribute("profilRequest", new ProfilRequest());
         model.addAttribute("creditBalanceRequest", new CreditBalanceRequest());
 
@@ -82,10 +74,7 @@ public class ProfilController {
     @PostMapping("/profil")
     public String updateProfil(@Valid @ModelAttribute("profilRequest") ProfilRequest request, BindingResult result, Model model) {
 
-        // NOTE : Récupère l'id de l'utilisateur connecté
         Long userId = SecurityTools.getConnectedUser().getId();
-
-        // NOTE : Datas pour rechargement de la page
         String username = customerService.getUsernameById(userId);
         String email = customerService.getEmailById(userId);
 
@@ -103,22 +92,20 @@ public class ProfilController {
             return "profil";
         }
 
-        // NOTE : Récupère le contenu dans la request
         String usernameRequest = request.getUsername();
         String emailRequest = request.getEmail();
         String passwordRequest = request.getPassword();
 
-        // NOTE : Demande au service de mettre à jour le customer
         try {
             customerService.updateCustomer(userId, usernameRequest, emailRequest, passwordRequest);
-            return "redirect:/transfert?profil=true";                                                                   // Redirection vers la page de transfert en cas de succès
+            return "redirect:/transfert?profil=true";
         } catch (Exception exception) {
             log.error("{} during updateCustomer: {}", exception.getClass().getSimpleName(), exception.getMessage());
             model.addAttribute("errorMessage", exception.getMessage());
             model.addAttribute("profilRequest", request);
             model.addAttribute("username", username);
             model.addAttribute("email", email);
-            return "profil";                                                                                            // Retourner la vue pour affichage de ou des erreurs
+            return "profil";
         }
 
     }
@@ -156,12 +143,12 @@ public class ProfilController {
         }
 
         try {
-            customerService.creditBalance(userId, request.getBalance());                     // Appel du service pour créditer la balance
-            return "redirect:/transfert?balanceSuccess=true";                               // Redirection avec succès
+            customerService.creditBalance(userId, request.getBalance());
+            return "redirect:/transfert?balanceSuccess=true";
         } catch (Exception exception) {
             log.error("{} Balance credit error : {}", exception.getClass().getSimpleName(), exception.getMessage());
             model.addAttribute("errorMessage", exception.getMessage());
-            return "profil";                                                                // Retourner à la page de profil avec message d'erreur
+            return "profil";
         }
     }
 

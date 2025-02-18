@@ -36,7 +36,6 @@ public class ConnectionController {
     @GetMapping("/connection")
     public String connection(Model model) {
 
-        // NOTE : Instancie l'objet pour la requête du formulaire
         model.addAttribute("connectionRequest", new ConnectionRequest());
 
         return "connection";
@@ -62,7 +61,6 @@ public class ConnectionController {
     @PostMapping("/connection")
     public String addConnection(@Valid @ModelAttribute("connectionRequest") ConnectionRequest request, BindingResult result, Model model) {
 
-        // NOTE : Récupère l'id de l'utilisateur connecté
         Long userId = SecurityTools.getConnectedUser().getId();
 
         if(result.hasErrors()){
@@ -77,15 +75,14 @@ public class ConnectionController {
             return "connection";
         }
 
-        // NOTE : Demande au service d'ajouter une connection
         try {
             customerService.addConnection(userId, request.getEmail());
-            return "redirect:/transfert?connection=true";                                                               // Redirection vers la page de transfert en cas de succès
+            return "redirect:/transfert?connection=true";
         } catch (Exception exception) {
             log.error("{} during addConnection: {}", exception.getClass().getSimpleName(), exception.getMessage());
             model.addAttribute("errorMessage", exception.getMessage());
             model.addAttribute("connectionRequest", request);
-            return "connection";                                                                                        // Retourner la vue pour affichage de ou des erreurs
+            return "connection";
         }
 
     }

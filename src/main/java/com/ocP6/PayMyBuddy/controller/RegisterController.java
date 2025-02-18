@@ -35,7 +35,6 @@ public class RegisterController {
     @GetMapping("/register")
     public String register(Model model) {
 
-        // NOTE : Instancie l'objet pour la requête du formulaire
         model.addAttribute("registerRequest", new RegisterRequest());
 
         return "register";
@@ -73,15 +72,14 @@ public class RegisterController {
             return "register";
         }
 
-        // NOTE : Demande au Service d'enregistrer un nouveau customer
         try {
             customerService.createCustomer(request.getUsername(), request.getEmail(), request.getPassword());
-            return "redirect:/login?success";                                                                           // Redirection vers la page de connexion en cas de succès
+            return "redirect:/login?success";
         } catch (Exception exception) {
             log.error("{} during createCustomer: {}", exception.getClass().getSimpleName(), exception.getMessage());
             model.addAttribute("errorMessage", exception.getMessage());
             model.addAttribute("registerRequest", request);
-            return "register";                                                                                          // Retourner la vue pour affichage de ou des erreurs
+            return "register";
         }
 
     }

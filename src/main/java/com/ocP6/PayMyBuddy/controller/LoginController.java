@@ -35,6 +35,4 @@ public class LoginController {
         return "login";
     }
 
-    // NOTE : Le post est entièrement géré par SpringSecurityConfig
-
 }
