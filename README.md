@@ -15,6 +15,8 @@ You can use these accounts to connect with authorizations :
 * username : ami / email : ami@ami.com / password : ami
 * username : copain / email : copain@copain.com / password : copain
 
+Check the data.sql file for more information about accounts.
+
 # UML Diagram
 ![UML_Diagram](docs/P6_UML.PNG)
 
