@@ -1,4 +1,4 @@
-/* Typographie et fond global */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,7 +8,7 @@ body {
 
 
 
-/* Boutons génériques */
+
 button {
     display: inline-block;
     border: none;
@@ -23,7 +23,7 @@ button:hover {
 }
 
 
-/* Header navbar */
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -54,19 +54,18 @@ button:hover {
 }
 
 
-/* Main */
+
 main {
     max-width: 900px;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
-    /*    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
 }
 
 
 
-/* Messages d'erreur et succès */
+
 .success-message {
     color: green;
     font-weight: bold;
@@ -91,7 +90,7 @@ main {
 
 
 
-/* Liens d'accès rapide */
+
 .skip-link {
     position: absolute;
     top: -40px;
@@ -110,7 +109,7 @@ main {
 
 
 
-/* Texte d'aide visuelle caché */
+
 .form-text.text-muted {
     font-size: 0.875rem;
     color: #6c757d;

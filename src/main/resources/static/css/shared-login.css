@@ -1,4 +1,4 @@
-/* Corps de la page */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -13,7 +13,7 @@ body {
 
 
 
-/* Conteneur main */
+
 main {
     background-color: #fff;
     padding: 20px;
@@ -25,7 +25,7 @@ main {
 
 
 
-/* Titre du conteneur */
+
 h1 {
     background-color: #f9a825;
     color: #fff;
@@ -38,7 +38,7 @@ h1 {
 
 
 
-/* Champs de formulaire */
+
 input {
     width: calc(100% - 20px);
     padding: 10px;
@@ -51,7 +51,7 @@ input {
 
 
 
-/* Bouton de connexion */
+
 button {
     background-color: #007bff;
     color: #fff;
@@ -64,14 +64,14 @@ button {
     cursor: pointer;
 }
 
-/* Effet au survol du bouton */
+
 button:hover {
     background-color: #0056b3;
 }
 
 
 
-/* Messages d'erreur et succès */
+
 .success-message {
     color: green;
     font-weight: bold;
@@ -96,7 +96,7 @@ button:hover {
 
 
 
-/* Liens d'accès rapide */
+
 .skip-link {
     position: absolute;
     top: -40px;
@@ -115,7 +115,7 @@ button:hover {
 
 
 
-/* Texte d'aide visuelle caché */
+
 .form-text.text-muted {
     font-size: 0.875rem;
     color: #6c757d;
