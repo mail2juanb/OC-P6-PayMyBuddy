@@ -9,7 +9,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data                               // Génère les getters, setters, toString, equals, et hashCode
+@Getter
+@Setter
 @NoArgsConstructor                  // Génère un constructeur sans arguments
 @AllArgsConstructor                 // Génère un constructeur avec tous les arguments
 @Builder                            // Permet d'ajouter des constructeurs personalisés
@@ -38,13 +39,11 @@ public class Customer {
 
     // Relation avec les transactions en tant que Sender
     @OneToMany(mappedBy = "sender")
-    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private List<Transaction> sentTransactions = new ArrayList<>();
 
 
     // Relation avec les transactions en tant que Receiver
     @OneToMany(mappedBy = "receiver")
-    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private List<Transaction> receivedTransactions = new ArrayList<>();
 
 
@@ -55,7 +54,6 @@ public class Customer {
             joinColumns = @JoinColumn(name = "user_id"),                                        // Nom réel de la colonne
             inverseJoinColumns = @JoinColumn(name = "connections_id")                           // Nom réel de l'autre colonne
     )
-    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private List<Customer> connections = new ArrayList<>();
 
 

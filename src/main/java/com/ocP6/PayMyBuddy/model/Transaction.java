@@ -2,16 +2,16 @@ package com.ocP6.PayMyBuddy.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "transactions")
-@Data                               // Génère les getters, setters, toString, equals, et hashCode
+@Getter
+@Setter
 @NoArgsConstructor                  // Génère un constructeur sans arguments
 public class Transaction {
 
@@ -22,13 +22,11 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "sender", nullable = false)
-    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private Customer sender;
 
 
     @ManyToOne
     @JoinColumn(name = "receiver", nullable = false)
-    @ToString.Exclude                                                                           // Empêche la récursion infinie
     private Customer receiver;
 
 
