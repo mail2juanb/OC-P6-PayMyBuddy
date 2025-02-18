@@ -17,10 +17,10 @@ You can use these accounts to connect with authorizations :
  * username : copain / email : copain@copain.com / password : copain
 
 ## UML Diagram
-![UML_Diagram](docs/P6_UML.png)
+![UML_Diagram](docs/P6_UML.PNG)
 
 ## MPD
-![MPD](docs/P6_MPD.png)
+![MPD](docs/P6_MPD.PNG)
 
 ### Reference Documentation
 For further reference, please consider the following sections:
