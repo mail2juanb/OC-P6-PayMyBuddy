@@ -8,6 +8,9 @@ The Pay My Buddy application is a solution that allows users to send money to th
 * Maven v3.9.9
 * Mysql v8.0.37
 
+# Database
+You must create a database named : pay_my_buddy_db
+
 # Login to application
 You can use these accounts to connect with authorizations :
 * username : user / email : user@user.com / password : user
